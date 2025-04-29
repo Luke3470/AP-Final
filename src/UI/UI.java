@@ -4,10 +4,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
-import java.security.PublicKey;
+
 
 public class UI {
 
@@ -19,19 +18,113 @@ public class UI {
     private int pagination;
     private int page;
 
+    private int maxpage;
+
     UI(){
         setPagination(25);
         setPage(1);
+        setMaxPage(10);
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        javax.swing.SwingUtilities.invokeLater(this::createAndShowGUI);
     }
 
-    public void addSearchToPane(Container pane){
+    public void addSearchToPane(Container pane,GridBagConstraints c){
+        c.fill = GridBagConstraints.HORIZONTAL;
 
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+
+        JLabel depAir = new JLabel("Departure Airport",SwingConstants.CENTER);
+        pane.add(depAir,c);
+
+        c.gridx = 2;
+        JLabel arrAir = new JLabel("Arrival Airport",SwingConstants.CENTER);
+        pane.add(arrAir,c);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        JTextField depAirField = new PlaceholderTextField("FLR");
+        pane.add(depAirField,c);
+
+        c.gridx = 2;
+        JTextField arrAirField = new PlaceholderTextField("FLR");
+        pane.add(arrAirField,c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        JLabel fliNum = new JLabel("Flight Number",SwingConstants.CENTER);
+        pane.add(fliNum,c);
+
+        c.gridx = 2;
+        JLabel air = new JLabel("Airline",SwingConstants.CENTER);
+        pane.add(air,c);
+
+        c.gridx = 0;
+        c.gridy = 4;
+        JTextField fliNumField = new PlaceholderTextField("1234");
+        pane.add(fliNumField,c);
+
+        c.gridx = 2;
+        JTextField airField = new PlaceholderTextField("Horizon Air");
+        pane.add(airField,c);
+
+        c.gridx = 0;
+        c.gridy = 5;
+
+        JLabel airCode = new JLabel("Airline Code",SwingConstants.CENTER);
+        pane.add(airCode,c);
+
+        c.gridx = 2;
+        JLabel strDate = new JLabel("Start Date",SwingConstants.CENTER);
+        pane.add(strDate,c);
+
+        c.gridx = 0;
+        c.gridy = 6;
+        JTextField airCodeField = new PlaceholderTextField("QX");
+        pane.add(airCodeField,c);
+
+        c.gridx = 2;
+        JTextField strDateField = new PlaceholderTextField("YYYYMMDD");
+        pane.add(strDateField,c);
+
+        c.gridx = 0;
+        c.gridy = 7;
+
+        JLabel endDate = new JLabel("End Data",SwingConstants.CENTER);
+        pane.add(endDate,c);
+
+        c.gridx = 2;
+        JLabel delay = new JLabel("Delay",SwingConstants.CENTER);
+        pane.add(delay,c);
+
+        c.gridx = 0;
+        c.gridy = 8;
+        JTextField endDateField = new PlaceholderTextField("YYYYMMDD");
+        pane.add(endDateField,c);
+
+        c.gridx = 2;
+        JTextField delayField = new PlaceholderTextField("10");
+        pane.add(delayField,c);
+
+        c.gridx = 0;
+        c.gridy = 9;
+
+        JLabel delReas = new JLabel("Delay Reason",SwingConstants.CENTER);
+        pane.add(delReas,c);
+
+        c.gridx = 2;
+        JLabel submit = new JLabel("Submit!",SwingConstants.CENTER);
+        pane.add(submit,c);
+
+        c.gridx = 0;
+        c.gridy = 10;
+        JTextField delReasField = new PlaceholderTextField("QX");
+        pane.add(delReasField,c);
+
+        c.gridx = 2;
+        JButton submitButt = new JButton("GO!");
+        pane.add(submitButt,c);
     }
 
     public void addCreateGraphToPane(Container pane){
@@ -77,33 +170,39 @@ public class UI {
         c.gridy = 0;
         c.gridwidth = 3;
         c.anchor = GridBagConstraints.PAGE_START;
-        dbButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Create a file chooser
-                JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+        dbButton.addActionListener(e -> {
+            // Create a file chooser
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 
-                // Show open dialog; this method does not return until the dialog is closed
-                int result = fileChooser.showOpenDialog(pane);
+            // Show open dialog; this method does not return until the dialog is closed
+            int result = fileChooser.showOpenDialog(pane);
 
-                // If a file is selected
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    dbButton.setText(selectedFile.getName());
-                }
+            // If a file is selected
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                dbButton.setText(selectedFile.getName());
             }
         });
         pane.add(dbButton, c);
 
     }
 
-    public void addSearchTableToPane(Container pane,GridBagConstraints c){
-
+    private boolean checkAndUpdateValue(String value) {
+        try {
+            int num = Integer.parseInt(value); // Try parsing the value as an integer
+            if (num < 301) {
+                return true;
+            } else {
+                System.out.println("Input is not valid. It should be below 300.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid integer.");
+            return false;
+        }
     }
 
-
     public void addJTableToPane(Container pane, GridBagConstraints c) {
-
 
         // Create table model and table
         String[] columnNames = {"Flight Number", "Date", "Arrival Airport","Departure Airport","Airline","Airline Code",
@@ -122,7 +221,7 @@ public class UI {
         c.weighty = 1;
         c.gridx = 4;
         c.gridwidth = 4;
-        c.gridheight = 5;
+        c.gridheight = 10;
         c.gridy = 2;
         pane.add(scrollPane, c);
 
@@ -131,21 +230,71 @@ public class UI {
         c.weighty = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
-        c.gridy = 7;
+        c.gridy = 12;
         c.insets = new Insets(0, 5, 0, 5);
-        JButton back = new JButton("Back");
-        pane.add(back,c);
 
         c.gridx=5;
-        JLabel page = new JLabel("Current Page "+getPage(),SwingConstants.CENTER);
+        JLabel page = new JLabel("Current Page "+getPage() +" ("+ getMaxPage()+")",SwingConstants.CENTER);
         pane.add(page,c);
 
+        c.gridx = 4;
+        JButton back = new JButton("Back");
+        pane.add(back,c);
+        back.addActionListener(e -> {
+            int val = getPage();
+            if (val > 1){
+                setPage(getPage()-1);
+                page.setText("Current Page "+getPage() +" ("+ getMaxPage()+")");
+            }
+        });
+
+
         c.gridx=6;
-        JLabel pagination =new JLabel("Results per Page "+getPagination(),SwingConstants.CENTER);
+        JTextField pagination = new JTextField("Results per Page "+getPagination());
+        pagination.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                pagination.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Update the variable when the text field loses focus
+                String editableValue = pagination.getText();
+                if(checkAndUpdateValue(editableValue))
+                    setPagination(Integer.parseInt(editableValue));
+                pagination.setText("Results per Page "+ getPagination());
+
+            }
+        });
+
+        pagination.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String editableValue = pagination.getText();
+                    if(checkAndUpdateValue(editableValue))
+                        setPagination(Integer.parseInt(editableValue));
+                    pagination.setText("Results per Page "+ getPagination());
+                    table.requestFocus();
+                }
+            }
+        });
+
+
         pane.add(pagination,c);
 
         c.gridx=7;
         JButton next = new JButton("Next");
+        next.addActionListener(e -> {
+            int val = getPage();
+            if (val < getMaxPage()){
+                setPage(getPage()+1);
+                page.setText("Current Page "+getPage() +" ("+ getMaxPage()+")");
+            }
+        });
+
         pane.add(next,c);
     }
 
@@ -156,6 +305,14 @@ public class UI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Set up the content pane.
         Container pane = frame.getContentPane();
+
+        try{
+            UIManager.createLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException | InstantiationError e) {
+            /* Do nothing and USe Normal Look and Feel */
+        }
+
+
         if (RIGHT_TO_LEFT) {
             pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
@@ -169,6 +326,7 @@ public class UI {
 
         addFileSearchToPane(pane, c);
         addJTableToPane(pane, c);
+        addSearchToPane(pane,c);
         addCreateGraphToPane(pane);
 
         //Display the window.
@@ -191,5 +349,13 @@ public class UI {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public int getMaxPage() {
+        return maxpage;
+    }
+
+    public void setMaxPage(int maxpage) {
+        this.maxpage = maxpage;
     }
 }

@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Initial Commit">
+    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="UI Complete">
+      <change afterPath="$PROJECT_DIR$/src/UI/PlaceholderTextField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataImporter/DI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/UI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +72,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.UI">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DataImporter.Main" />
       <module name="AP-Project" />
@@ -115,7 +116,7 @@
       <workItem from="1745861105456" duration="1135000" />
       <workItem from="1745867502280" duration="14676000" />
       <workItem from="1745916220656" duration="417000" />
-      <workItem from="1745960882597" duration="3688000" />
+      <workItem from="1745960882597" duration="8310000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -125,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745882066360</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Hopefully complete Data Import now">
+      <option name="closed" value="true" />
+      <created>1745965041378</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745965041378</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -144,6 +153,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Hopefully complete Data Import now" />
+    <MESSAGE value="Pagination Edit" />
+    <MESSAGE value="UI Complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI Complete" />
   </component>
 </project>
