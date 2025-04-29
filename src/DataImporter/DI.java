@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -120,13 +121,37 @@ public class DI {
 
 
     //Combo class used to make data returns easier
-    private static class Combo {
+    public static class Combo {
         Boolean valid;
         String[] data;
 
     }
 
+    private int convertToMinutes(String timeStr) {
+        // Handle times like "930", "1430", "1500"
+        int hours = Integer.parseInt(timeStr.substring(0, timeStr.length() - 2));
+        int minutes = Integer.parseInt(timeStr.substring(timeStr.length() - 2));
 
+        return hours * 60 + minutes;  // Convert hours to minutes and add minutes
+    }
+
+    public int calculateDelay(String expectedStr, String actualStr) {
+
+        int expectedMinutes = convertToMinutes(expectedStr);
+        int actualMinutes = convertToMinutes(actualStr);
+
+        // Calculate the delay in minutes
+        int delay = actualMinutes - expectedMinutes;
+
+        // Adjust for next day wrap-around
+        if (delay < -720)
+            delay += 1440;  // Add 24 hours
+        else if (delay > 720)
+            delay -= 1440;  // Subtract 24 hours
+
+
+        return delay;
+    }
     public Combo isValid(String Line, Integer count) {
 
         //Used to Parse CSV Which contains ,'s
@@ -239,7 +264,7 @@ public class DI {
 
         //Delay Flight to be ignored
         if (data[20].equals("1.0")) {
-            //System.out.println("Line: "+count+ " Error Cancelled Flight");
+            System.out.println("Line: "+count+ " Error Cancelled Flight");
             return data_cleaned;
         }
 
@@ -249,31 +274,26 @@ public class DI {
             for (int i = 27; i < 32; i++) {
                 if (!Objects.equals(data[i], "")) {
                     if (data[i].equals("0.0")) {
-                        switch (i) {
-                            case 27:
-                                delay_reason = delay_reason + "Carrier,";
-                                break;
-                            case 28:
-                                delay_reason = delay_reason + "Weather,";
-                                break;
-                            case 29:
-                                delay_reason = delay_reason + "NAS,";
-                                break;
-                            case 30:
-                                delay_reason = delay_reason + "Security,";
-                                break;
-                            case 31:
-                                delay_reason = delay_reason + "Aircraft";
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + i);
-                        }
+                        delay_reason = switch (i) {
+                            case 27 -> delay_reason + "Carrier,";
+                            case 28 -> delay_reason + "Weather,";
+                            case 29 -> delay_reason + "NAS,";
+                            case 30 -> delay_reason + "Security,";
+                            case 31 -> delay_reason + "Aircraft";
+                            default -> throw new IllegalStateException("Unexpected value: " + i);
+                        };
                     }
                 }
             }
             data_cleaned.data[12] = delay_reason;
             //Calculated delay
-            data_cleaned.data[13] = String.valueOf(Integer.parseInt(data[18]) - Integer.parseInt(data[17]));
+            int delay = calculateDelay(data[17],data[18]);
+            if (delay > 0) {
+                data_cleaned.data[13] = String.valueOf(delay);
+            }else {
+                System.out.println("Line: "+count+ " Error when calculating delay");
+                return data_cleaned;
+            }
         }
 
         //Assign Data to a cleaned small Array for Simplicity

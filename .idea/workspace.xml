@@ -4,23 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AP-Project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataImporter/DI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataImporter/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UI/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UI/UI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/exceptions/DataBaseConnectionException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/exceptions/IncorrectFilePathException.java" afterDir="false" />
+    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Initial Commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataImporter/DI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,10 +65,13 @@
   "keyToStringList": {
     "DatabaseDriversLRU": [
       "sqlite"
+    ],
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "GitIgnore"
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="Application.UI">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DataImporter.Main" />
       <module name="AP-Project" />
@@ -123,11 +113,37 @@
       <workItem from="1745832646723" duration="10028000" />
       <workItem from="1745846772731" duration="11627000" />
       <workItem from="1745861105456" duration="1135000" />
-      <workItem from="1745867502280" duration="14276000" />
+      <workItem from="1745867502280" duration="14676000" />
+      <workItem from="1745916220656" duration="417000" />
+      <workItem from="1745960882597" duration="3688000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <option name="closed" value="true" />
+      <created>1745882066360</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745882066360</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
   </component>
 </project>

@@ -7,7 +7,6 @@ import java.sql.Statement;
 
 public class DB {
 
-
     final private String DB_URL = "jdbc:sqlite:C:\\Users\\ljcad\\IdeaProjects\\AP-Project\\src\\DataImporter\\database.sqlite";
 
     DB() {
@@ -48,18 +47,18 @@ public class DB {
         try (Statement stmt = getStmt()) {
             stmt.executeUpdate("CREATE TABLE Airline(" +
                     "name      TEXT ," +
-                    "iata_code TEXT CHECK (LENGTH(iata_code) <= 2)" +
+                    "iata_code TEXT CHECK (LENGTH(iata_code) = 2)" +
                     "   constraint iata_code" +
                     "       primary key);");
 
             stmt.executeUpdate("CREATE TABLE Airport(" +
                     "name      TEXT," +
-                    "iata_code TEXT CHECK (LENGTH(iata_code) <= 3)" +
+                    "iata_code TEXT CHECK (LENGTH(iata_code) = 3)" +
                     "   constraint iata_code" +
                     "       primary key);");
 
             stmt.executeUpdate("CREATE TABLE Flight(" +
-                    "date      TEXT CHECK (LENGTH(date) <= 3)," +
+                    "date      TEXT CHECK (LENGTH(date) = 8)," +
                     "flight_number integer," +
                     "scheduled_departure integer," +
                     "actual_departure integer," +
@@ -68,13 +67,13 @@ public class DB {
                     "flight_id integer" +
                     "CONSTRAINT flight_id" +
                     "primary key," +
-                    "airline_code TEXT CHECK (LENGTH(airline_code) <= 2)" +
+                    "airline_code TEXT CHECK (LENGTH(airline_code) = 2)" +
                     "   CONSTRAINT airline_code" +
                     "       references Airline," +
-                    "flight_origin TEXT CHECK (LENGTH(flight_origin) <= 3)" +
+                    "flight_origin TEXT CHECK (LENGTH(flight_origin) = 3)" +
                     "   CONSTRAINT flight_origin" +
                     "       references Airport," +
-                    "flight_destination TEXT CHECK (LENGTH(flight_destination) <= 3)" +
+                    "flight_destination TEXT CHECK (LENGTH(flight_destination) = 3)" +
                     "   CONSTRAINT flight_destination" +
                     "       references Airport);"
             );
