@@ -306,7 +306,7 @@ public class DI {
     private String getDelayReason(String[] data) {
         StringBuilder reasonBuilder = new StringBuilder();
         for (int i = 27; i <= 31; i++) {
-            if (!data[i].isEmpty() && "0.0".equals(data[i])) {
+            if (!("0.0".equals(data[i]))) {
                 reasonBuilder.append(DELAY_REASONS[i - 27]);
                 if (i < 31) {
                     reasonBuilder.append(",");
@@ -314,14 +314,11 @@ public class DI {
             }
         }
         // Remove trailing comma if any
-        if (!reasonBuilder.isEmpty() && reasonBuilder.charAt(reasonBuilder.length() - 1) == ',') {
+        if (reasonBuilder.charAt(reasonBuilder.length() - 1) == ',') {
             reasonBuilder.setLength(reasonBuilder.length() - 1);
         }
         return reasonBuilder.toString();
     }
-
-
-
 
 
     //Getters Setters
