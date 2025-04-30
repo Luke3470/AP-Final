@@ -18,6 +18,10 @@ public class DI {
 
     private Path csvpath;
 
+    private final String[] DELAY_REASONS = {
+            "Carrier", "Weather", "NAS", "Security", "Aircraft"
+    };
+
 
     DI() {
         setCsvPath(Path.of(System.getProperty("user.dir") + "\\lib\\Data\\flights_sample_3m.csv"));
@@ -54,11 +58,8 @@ public class DI {
                     pstmtAirline.setString(1, combo.data[1]);
                     pstmtAirline.setString(2, combo.data[2]);
                     //Setting Airport Values
-                    pstmtAirport.setString(1, combo.data[4]);
-                    pstmtAirport.setString(2, combo.data[5]);
-                    pstmtAirport.addBatch();
-                    pstmtAirport.setString(1, combo.data[6]);
-                    pstmtAirport.setString(2, combo.data[7]);
+                    setAirportBatch(pstmtAirport, combo.data[5], combo.data[4]);
+                    setAirportBatch(pstmtAirport, combo.data[7], combo.data[6]);
                     //Setting Flight Values
                     pstmtFlight.setString(1, combo.data[0]);
                     pstmtFlight.setInt(2, Integer.parseInt(combo.data[3]));
@@ -84,10 +85,7 @@ public class DI {
                     }
 
                     if ((total % 25000) == 0) {
-                        pstmtAirline.executeBatch();
-                        pstmtAirport.executeBatch();
-                        pstmtFlight.executeBatch();
-                        pstmtDelayReason.executeBatch();
+                        executeAllBatches(pstmtAirline, pstmtAirport, pstmtFlight, pstmtDelayReason);
                     }
 
 
@@ -104,10 +102,8 @@ public class DI {
                 }
                 total += 1;
             }
-            pstmtAirline.executeBatch();
-            pstmtAirport.executeBatch();
-            pstmtFlight.executeBatch();
-            pstmtDelayReason.executeBatch();
+
+            executeAllBatches(pstmtAirline, pstmtAirport, pstmtFlight, pstmtDelayReason);
 
             connection.commit();
             connection.close();
@@ -127,31 +123,7 @@ public class DI {
 
     }
 
-    private int convertToMinutes(String timeStr) {
-        // Handle times like "930", "1430", "1500"
-        int hours = Integer.parseInt(timeStr.substring(0, timeStr.length() - 2));
-        int minutes = Integer.parseInt(timeStr.substring(timeStr.length() - 2));
 
-        return hours * 60 + minutes;  // Convert hours to minutes and add minutes
-    }
-
-    public int calculateDelay(String expectedStr, String actualStr) {
-
-        int expectedMinutes = convertToMinutes(expectedStr);
-        int actualMinutes = convertToMinutes(actualStr);
-
-        // Calculate the delay in minutes
-        int delay = actualMinutes - expectedMinutes;
-
-        // Adjust for next day wrap-around
-        if (delay < -720)
-            delay += 1440;  // Add 24 hours
-        else if (delay > 720)
-            delay -= 1440;  // Subtract 24 hours
-
-
-        return delay;
-    }
     public Combo isValid(String Line, Integer count) {
 
         //Used to Parse CSV Which contains ,'s
@@ -167,131 +139,71 @@ public class DI {
         data_cleaned.valid = false;
 
         //Check date time is between 2019-2023 and valid Whist Removing - to be in specified Format YYYYMMDD
-        boolean valid = data[0].matches("(2019|2020|2021|2022|2023)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])");
-        data[0] = data[0].replace("-", "");
-        if (!valid) {
+        if (!isValidDate(data[0])) {
             System.out.println("Line: " + count + " Error in Flight Date");
             return data_cleaned;
         }
+        data[0] = data[0].replace("-", "");
 
-        //Check Airline Code is Valid
-        valid = data[3].matches("[a-zA-Z0-9]{2}");
-        if (!valid) {
+        if (!isValidAirlineCode(data[3])) {
             System.out.println("Line: " + count + " Error in Airline Code");
             return data_cleaned;
         }
 
-        //Check Flight Number
-        valid = data[5].matches("[0-9]{1,4}");
-        if (!valid) {
+        if (!isValidFlightNumber(data[5])) {
             System.out.println("Line: " + count + " Error in Flight Number");
             return data_cleaned;
         }
 
-        //Check IATA Code of Airport is in Correct Format
-        valid = data[6].matches("[A-Z]{3}");
-        if (!valid) {
+        if (!isValidIATACode(data[6])) {
             System.out.println("Line: " + count + " Error in Departure Airport Code");
             return data_cleaned;
         }
 
-
-        //Check IATA Code of Airport is in Correct Format
-        valid = data[8].matches("[A-Z]{3}");
-        if (!valid) {
+        if (!isValidIATACode(data[8])) {
             System.out.println("Line: " + count + " Error in Destination Airport Code");
             return data_cleaned;
         }
 
-
-        //Remove add 0s so all times are formatted HHMM
-        String temp = data[10];
-        for (int i = data[10].length(); i < 4; i++) {
-            temp = "0" + temp;
-        }
-        data[10] = temp;
-        valid = data[10].matches("[0-9]{4}");
-        if (!valid) {
+        data[10] = formatTime(data[10]);
+        if (!data[10].matches("\\d{4}")) {
             System.out.println("Line: " + count + " Error in Expected Departure Time");
             return data_cleaned;
         }
 
-
-        //Remove trailing .0 and add 0 so all times are formatted HHMM
-        temp = data[11].replace(".0", "");
-        int temp_length = temp.length();
-        for (int i = temp_length; i < 4; i++) {
-            temp = "0" + temp;
-        }
-        data[11] = temp;
-
-        valid = data[11].matches("[0-9]{4}");
-        if (!valid) {
+        data[11] = formatTime(data[11]);
+        if (!data[11].matches("\\d{4}")) {
             System.out.println("Line: " + count + " Error in Actual Departure Time");
             return data_cleaned;
         }
 
-
-        //Remove add 0s so all times are formatted HHMM
-        temp = data[17];
-        for (int i = data[17].length(); i < 4; i++) {
-            temp = "0" + temp;
-        }
-        data[17] = temp;
-        valid = data[17].matches("[0-9]{4}");
-
-        if (!valid) {
+        data[17] = formatTime(data[17]);
+        if (!data[17].matches("\\d{4}")) {
             System.out.println("Line: " + count + " Error in Expected Arrival Time");
             return data_cleaned;
         }
 
-
-        //Remove trailing .0 and add 0s so all times are formatted HHMM
-        temp = data[18].replace(".0", "");
-        temp_length = temp.length();
-
-        for (int i = temp_length; i < 4; i++) {
-            temp = "0" + temp;
-        }
-        data[18] = temp;
-
-        valid = data[18].matches("[0-9]{4}");
-        if (!valid) {
+        data[18] = formatTime(data[18]);
+        if (!data[18].matches("\\d{4}")) {
             System.out.println("Line: " + count + " Error in Actual Arrival Time");
             return data_cleaned;
         }
 
-
-        //Delay Flight to be ignored
-        if (data[20].equals("1.0")) {
-            System.out.println("Line: "+count+ " Error Cancelled Flight");
+        if ("1.0".equals(data[20])) {
+            System.out.println("Line: " + count + " Error Cancelled Flight");
             return data_cleaned;
         }
 
         //If row Contains delays data go through and collect Reasons and Calculate delay
         if (data.length == 32) {
-            String delay_reason = "";
-            for (int i = 27; i < 32; i++) {
-                if (!Objects.equals(data[i], "")) {
-                    if (data[i].equals("0.0")) {
-                        delay_reason = switch (i) {
-                            case 27 -> delay_reason + "Carrier,";
-                            case 28 -> delay_reason + "Weather,";
-                            case 29 -> delay_reason + "NAS,";
-                            case 30 -> delay_reason + "Security,";
-                            case 31 -> delay_reason + "Aircraft";
-                            default -> throw new IllegalStateException("Unexpected value: " + i);
-                        };
-                    }
-                }
-            }
-            data_cleaned.data[12] = delay_reason;
-            //Calculated delay
-            int delay = calculateDelay(data[17],data[18]);
+            String delayReason = getDelayReason(data);
+            data_cleaned.data[12] = delayReason;
+
+            int delay = calculateDelay(data[17], data[18]);
             if (delay > 0) {
                 data_cleaned.data[13] = String.valueOf(delay);
-            }else {
-                System.out.println("Line: "+count+ " Error when calculating delay");
+            } else {
+                System.out.println("Line: " + count + " Error when calculating delay");
                 return data_cleaned;
             }
         }
@@ -324,6 +236,95 @@ public class DI {
         data_cleaned.data[11] = data[18];
         return data_cleaned;
     }
+
+    //DB Batch Functions
+    private void setAirportBatch(PreparedStatement pstmt, String code, String name) throws SQLException {
+        pstmt.setString(1, code);
+        pstmt.setString(2, name);
+        pstmt.addBatch();
+    }
+
+    private void executeAllBatches(PreparedStatement... statements) throws SQLException {
+        for (PreparedStatement stmt : statements) {
+            if (stmt != null) stmt.executeBatch();
+        }
+    }
+
+
+    //Validation Functions
+
+    private int convertToMinutes(String timeStr) {
+        // Handle times like "930", "1430", "1500"
+        int hours = Integer.parseInt(timeStr.substring(0, timeStr.length() - 2));
+        int minutes = Integer.parseInt(timeStr.substring(timeStr.length() - 2));
+
+        return hours * 60 + minutes;  // Convert hours to minutes and add minutes
+    }
+
+    public int calculateDelay(String expectedStr, String actualStr) {
+
+        int expectedMinutes = convertToMinutes(expectedStr);
+        int actualMinutes = convertToMinutes(actualStr);
+
+        // Calculate the delay in minutes
+        int delay = actualMinutes - expectedMinutes;
+
+        // Adjust for next day wrap-around
+        if (delay < -720)
+            delay += 1440;  // Add 24 hours
+        else if (delay > 720)
+            delay -= 1440;  // Subtract 24 hours
+
+
+        return delay;
+    }
+
+    private boolean isValidDate(String date) {
+        return date.matches("(2019|2020|2021|2022|2023)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])");
+    }
+
+    private boolean isValidAirlineCode(String code) {
+        return code.matches("[a-zA-Z0-9]{2}");
+    }
+
+    private boolean isValidFlightNumber(String number) {
+        return number.matches("\\d{1,4}");
+    }
+
+    private boolean isValidIATACode(String code) {
+        return code.matches("[A-Z]{3}");
+    }
+
+    private String formatTime(String time) {
+        time = time.replace(".0", "");
+        while (time.length() < 4) {
+            time = "0" + time;
+        }
+        return time;
+    }
+
+    private String getDelayReason(String[] data) {
+        StringBuilder reasonBuilder = new StringBuilder();
+        for (int i = 27; i <= 31; i++) {
+            if (!data[i].isEmpty() && "0.0".equals(data[i])) {
+                reasonBuilder.append(DELAY_REASONS[i - 27]);
+                if (i < 31) {
+                    reasonBuilder.append(",");
+                }
+            }
+        }
+        // Remove trailing comma if any
+        if (!reasonBuilder.isEmpty() && reasonBuilder.charAt(reasonBuilder.length() - 1) == ',') {
+            reasonBuilder.setLength(reasonBuilder.length() - 1);
+        }
+        return reasonBuilder.toString();
+    }
+
+
+
+
+
+    //Getters Setters
 
     public Path getCsvPath() {
         return csvpath;
