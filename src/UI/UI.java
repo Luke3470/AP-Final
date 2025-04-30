@@ -1,5 +1,7 @@
 package UI;
 
+import UI.Utils.PlaceholderTextField;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
