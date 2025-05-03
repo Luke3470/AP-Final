@@ -54,7 +54,6 @@ public class ChooChooPlaneView {
 
     ChooChooPlaneView () {
         createAndShowGUI();
-        this.hasPaginationRun = false;
     }
     private void createAndShowGUI() {
         frame = new JFrame("Choo Choo Plane");
