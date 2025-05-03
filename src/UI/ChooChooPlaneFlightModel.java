@@ -20,10 +20,6 @@ public class ChooChooPlaneFlightModel {
 
     }
 
-    // Pagination logic
-    public int getPagination() {
-        return pagination;
-    }
 
     public void setPagination(int pagination) {
         this.pagination = pagination;
@@ -41,8 +37,8 @@ public class ChooChooPlaneFlightModel {
         return maxPage;
     }
 
-    public void setMaxPage(int maxPage) {
-        this.maxPage = maxPage;
+    public String getDb_url() {
+        return db_url;
     }
 
 
@@ -80,27 +76,29 @@ public class ChooChooPlaneFlightModel {
         List<Object> paramValues = new ArrayList<>();
 
 
-        StringBuilder sql = new StringBuilder("SELECT\n" +
-                "    Flight.flight_number,\n" +
-                "    Flight.date,\n" +
-                "    AirportOrigin.name AS origin_airport_name,\n" +
-                "    AirportDestination.name AS destination_airport_name,\n" +
-                "    Airline.name AS airline_name,\n" +
-                "    Flight.airline_code,\n" +
-                "    Delay_Reason.delay_length,\n" +
-                "    Delay_Reason.reason\n" +
-                "FROM Flight\n" +
-                "         JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin\n" +
-                "         JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination\n" +
-                "         JOIN Airline ON Airline.iata_code = Flight.airline_code\n" +
-                "         LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id ");
+        StringBuilder sql = new StringBuilder("""
+                SELECT
+                    Flight.flight_number,
+                    Flight.date,
+                    AirportOrigin.name AS origin_airport_name,
+                    AirportDestination.name AS destination_airport_name,
+                    Airline.name AS airline_name,
+                    Flight.airline_code,
+                    Delay_Reason.delay_length,
+                    Delay_Reason.reason
+                FROM Flight
+                         JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin
+                         JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination
+                         JOIN Airline ON Airline.iata_code = Flight.airline_code
+                         LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id\s""");
 
-                StringBuilder sql_count = new StringBuilder("SELECT COUNT(*) AS Total\n"+
-                "FROM Flight\n" +
-                "         JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin\n" +
-                "         JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination\n" +
-                "         JOIN Airline ON Airline.iata_code = Flight.airline_code\n" +
-                "         LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id");
+                StringBuilder sql_count = new StringBuilder("""
+                        SELECT COUNT(*) AS Total
+                        FROM Flight
+                                 JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin
+                                 JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination
+                                 JOIN Airline ON Airline.iata_code = Flight.airline_code
+                                 LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id""");
 
 
         if (!mapSearchParams.isEmpty()) {
@@ -147,7 +145,7 @@ public class ChooChooPlaneFlightModel {
         if(sort != null){
             String col = getCol(sort[0]);
             if (col != null) {
-                if(sort[1].toString() == "ASCENDING") {
+                if(Objects.equals(sort[1].toString(), "ASCENDING")) {
                     sql.append(" ORDER BY ").append(col).append(" ASC;");
                 }else {
                 sql.append(" ORDER BY ").append(col).append(" DESC;");
@@ -158,8 +156,8 @@ public class ChooChooPlaneFlightModel {
             sql_count.append(" ;");
         }
 
-        System.out.println("SQL: " + sql.toString());
-        int count = 0;
+        System.out.println("SQL: " + sql);
+        int count;
 
 
         try (Connection conn = DriverManager.getConnection(db_url)) {
@@ -215,12 +213,7 @@ public class ChooChooPlaneFlightModel {
 
         return searchResults;
     }
-
-    public void setSearchResults(Object[][] searchResults) {
-        this.searchResults = searchResults;
-    }
-
-
+    
     public HashMap<Integer, String> getValueLookup(){
         HashMap<java.lang.Integer, java.lang.String> valueLookup = new HashMap<>();
         valueLookup.put(0,"flight_origin");

@@ -1,7 +1,6 @@
 package UI;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
@@ -49,13 +48,13 @@ public class ChooChooPlaneController {
             Map<Integer,String> mapSearchParams = new HashMap<>();
             var fields = view.getSearchFields();
             int count = 0;
-            String val=null;
+            String val;
 
             for (JComponent field : fields) {
                 if (field instanceof JTextField) {
                     val = ((JTextField) field).getText();
                 }else{
-                    val = (String) ((JComboBox) field).getSelectedItem();
+                    val = (String) ((JComboBox<?>) field).getSelectedItem();
                 }
                 if (((val != null) && (!Objects.equals(placeholders[count][0], val)) && (val.matches(placeholders[count][1])))){
                     mapSearchParams.put(count,val);
@@ -195,6 +194,4 @@ public class ChooChooPlaneController {
         }
 
     }
-
-
 }
