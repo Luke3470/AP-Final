@@ -4,10 +4,14 @@ import UI.Utils.PlaceholderTextField;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ChooChooPlaneView {
 
@@ -23,10 +27,30 @@ public class ChooChooPlaneView {
     private JButton airlineGraphButton;
     private JButton timeGraphButton;
     private JButton dbButton;
-    private List<JTextField> searchFields;
+    private JScrollPane scrollPane;
+    private List<JComponent> searchFields;
+    private JLabel loading;
+    private JDialog errorMessage;
+    private JLabel error;
+    private boolean hasPaginationRun;
     private final boolean shouldFill = true;
     private final boolean shouldWeightX = true;
     private final boolean RIGHT_TO_LEFT = false;
+    private final String[] columnNames = {
+            "Flight Number", "Date", "Arrival Airport", "Departure Airport", "Airline",
+            "Airline Code", "Delay", "Delay Reason"
+    };
+
+    private final String[][] placeholders = {
+            {"XXX","[A-Z]{3}"},
+            {"XXX","[A-Z]{3}"},
+            {"9999","\\d{1,4}"},
+            {"Fake Airline",".*"},
+            {"XX","[a-zA-Z0-9]{2}"},
+            {"YYYYMMDD","(2019|2020|2021|2022|2023)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"},
+            {"YYYYMMDD","(2019|2020|2021|2022|2023)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"},
+            {"1O","\\d{1,4}"},
+            {"None",".*"}};
 
     ChooChooPlaneView () {
         createAndShowGUI();
@@ -77,7 +101,7 @@ public class ChooChooPlaneView {
     private void addSearchFormToPane(Container pane, GridBagConstraints c) {
         searchFields = new ArrayList<>();
         String[][] labels = {
-                {"Departure Airport", "Arrival Airport"},
+                {"Arrival Airport","Departure Airport"},
                 {"Flight Number", "Airline"},
                 {"Airline Code", "Start Date"},
                 {"End Date", "Delay"},
@@ -95,7 +119,9 @@ public class ChooChooPlaneView {
             row++;
         }
 
-        String[] placeholders = {"FLR", "FLR", "1234", "Horizon Air", "QX", "YYYYMMDD", "YYYYMMDD", "10", "QX"};
+        String[] placeholders =  Arrays.stream(getPlaceholders())
+                .map(x -> x[0])
+                .toArray(String[]::new);
 
         int fieldIndex = 0;
         for (int r = 0; r < 4; r++) {
@@ -111,7 +137,7 @@ public class ChooChooPlaneView {
         // Last row has only one text field and one button
         c.gridx = 0;
         c.gridy = row * 2 - 1;
-        JTextField delayReasonField = new PlaceholderTextField(placeholders[fieldIndex]);
+        JComboBox<String> delayReasonField = new JComboBox<>();
         searchFields.add(delayReasonField);
         pane.add(delayReasonField, c);
 
@@ -121,11 +147,11 @@ public class ChooChooPlaneView {
     }
 
     private void addTablePane(Container pane, GridBagConstraints c) {
-        String[] columnNames = {"Flight Number", "Date", "Arrival Airport", "Departure Airport", "Airline", "Airline Code", "Delay", "Delay Reason"};
+
         tableModel = new DefaultTableModel(new Object[0][0], columnNames);
         table = new JTable(tableModel);
         table.setRowSorter(new TableRowSorter<>(tableModel));
-        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table);
 
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1;
@@ -181,7 +207,7 @@ public class ChooChooPlaneView {
         pane.add(timeGraphButton, c);
 
         c.gridx = 7;
-        JLabel loading = new JLabel("Loading...", SwingConstants.CENTER);
+        loading = new JLabel("NA", SwingConstants.CENTER);
         pane.add(loading, c);
     }
 
@@ -210,10 +236,119 @@ public class ChooChooPlaneView {
 
     public JLabel getPageLabel() { return pageLabel; }
 
-    public List<JTextField> getSearchFields() { return searchFields; }
+    public List<JComponent> getSearchFields() { return searchFields; }
+
+    public void setLoading(){
+        loading.setText("Loading . . .");
+    }
+    public void setLoaded(){
+        loading.setText("Complete!");
+    }
+
+    public void resetScroll(){
+        scrollPane.getViewport().setViewPosition(new Point(0,0));
+    }
+
+    public void clearTableData(){
+        tableModel.setRowCount(0);
+    }
+
+    public void setTableData(Object [][] data){
+        DefaultTableModel model = tableModel;
+
+        // Save filter and sort keys
+        TableRowSorter<DefaultTableModel> oldSorter;
+        oldSorter = (TableRowSorter<DefaultTableModel>) table.getRowSorter();
+        List<? extends RowSorter.SortKey> sortKeys = oldSorter != null ? oldSorter.getSortKeys() : null;
+        RowFilter<DefaultTableModel, Integer> filter = oldSorter != null ? (RowFilter<DefaultTableModel, Integer>) oldSorter.getRowFilter() : null;
+
+        data = removeNullRows(data);
+        model.setDataVector(data, columnNames);
+
+        // Recreate sorter
+        TableRowSorter<DefaultTableModel> newSorter = new TableRowSorter<>(model);
+        if (sortKeys != null) newSorter.setSortKeys(sortKeys);
+        if (filter != null) newSorter.setRowFilter(filter);
+
+        table.setRowSorter(newSorter);
+    }
+
+    public Object[][] removeNullRows(Object[][] input) {
+        return Arrays.stream(input)
+                .filter(row -> row != null && Arrays.stream(row).anyMatch(Objects::nonNull))
+                .toArray(Object[][]::new);
+    }
+
+    public Object[] isSorted() {
+        RowSorter<? extends TableModel> sorter = table.getRowSorter();
+
+        if (sorter != null) {
+            List<? extends RowSorter.SortKey> sortKeys = sorter.getSortKeys();
+
+            if (!sortKeys.isEmpty()) {
+                RowSorter.SortKey key = sortKeys.get(0);
+                int columnIndex = key.getColumn();
+                SortOrder order = key.getSortOrder();
+                String columnName = table.getColumnName(columnIndex);
+
+                return new Object[] { columnName, order };
+            }
+        }
+
+        return null; // or return new Object[] { null, SortOrder.UNSORTED };
+    }
+
+    public int getTotalColumns(){
+        return columnNames.length;
+    }
 
     public void updatePageLabel(int page, int maxPage) {
 
         this.pageLabel.setText("Current Page "+ page +" ("+ maxPage+")");
+    }
+
+    public void setComboBox(String [] results){
+        List<JComponent> temp = getSearchFields();
+        JComboBox combo = ((JComboBox) temp.getLast());
+
+        combo.removeAllItems();
+        for (String result : results) {
+            combo.addItem(result);
+        }
+        searchFields.set((searchFields.size()-1),combo);
+    }
+
+    public void showError(String errorText){
+        if ((errorMessage !=null)&&(errorMessage.isVisible())){
+            errorMessage.dispose();
+            error.setText(errorText);
+            errorMessage.setLocationRelativeTo(frame);
+            errorMessage.setVisible(true);
+        }else{
+            errorMessage = new JDialog(frame,"Error",true);
+            error = new JLabel(errorText);
+            errorMessage.add(error);
+            errorMessage.pack();
+            errorMessage.setLocationRelativeTo(frame);
+            errorMessage.setVisible(true);
+        }
+
+    }
+
+
+    public String[][] getPlaceholders() {
+        return placeholders;
+    }
+
+    public JTableHeader getTableHeader(){
+        return table.getTableHeader();
+    }
+
+    public boolean getHasPaginationRun() {
+        return hasPaginationRun;
+    }
+
+    public void setHasPaginationRun(boolean hasPaginationRun) {
+        this.hasPaginationRun = hasPaginationRun;
     }
 }

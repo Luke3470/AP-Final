@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Mass Refactor of UI Code to MVC">
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/UI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/DB.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +49,7 @@
     "Application.GridBagLayoutDemo.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.UI.Main.executor": "Run",
-    "Application.UI.executor": "Run",
+    "Application.UI.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -126,7 +127,9 @@
       <workItem from="1745916220656" duration="417000" />
       <workItem from="1745960882597" duration="8310000" />
       <workItem from="1746009384043" duration="3194000" />
-      <workItem from="1746031547383" duration="3630000" />
+      <workItem from="1746031547383" duration="3687000" />
+      <workItem from="1746122632139" duration="16867000" />
+      <workItem from="1746278881879" duration="10269000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -176,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746031743426</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Mass Refactor of UI Code to MVC">
+      <option name="closed" value="true" />
+      <created>1746051228102</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746051228102</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -202,5 +213,25 @@
     <MESSAGE value="Mass Refactor of UI Code" />
     <MESSAGE value="Mass Refactor of UI Code to MVC" />
     <option name="LAST_COMMIT_MESSAGE" value="Mass Refactor of UI Code to MVC" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.ArrayIndexOutOfBoundsException" package="java.lang" />
+          <option name="timeStamp" value="34" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneController.java</url>
+          <line>170</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneController.java</url>
+          <line>160</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

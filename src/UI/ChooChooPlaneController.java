@@ -1,8 +1,10 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.event.*;
 import java.io.File;
+import java.util.*;
 
 public class ChooChooPlaneController {
     private final ChooChooPlaneView view;
@@ -11,7 +13,6 @@ public class ChooChooPlaneController {
     public ChooChooPlaneController(ChooChooPlaneView view, ChooChooPlaneFlightModel model) {
         this.view = view;
         this.model = model;
-
         // Register all listeners
         initController();
     }
@@ -23,16 +24,49 @@ public class ChooChooPlaneController {
         view.getNextButton().addActionListener(e -> onNext());
         view.getPaginationField().addFocusListener(new PaginationFocusHandler());
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
+        view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
     }
 
     private void onSubmit() {
-        // Collect search values and perform actions
-        var fields = view.getSearchFields();
-        for (JTextField field : fields) {
-            System.out.println("Search value: " + field.getText());
-        }
+        if (model.hasDB()) {
+            view.setLoading();
 
-        // You can add model interaction here later
+            // Collect search values and perform actions
+            String [][] placeholders = view.getPlaceholders();
+            Map<Integer,String> mapSearchParams = new HashMap<>();
+            var fields = view.getSearchFields();
+            int count = 0;
+            String val=null;
+
+            for (JComponent field : fields) {
+                if (field instanceof JTextField) {
+                    val = ((JTextField) field).getText();
+                }else{
+                    val = (String) ((JComboBox) field).getSelectedItem();
+                }
+                if (((val != null) && (!Objects.equals(placeholders[count][0], val)) && (val.matches(placeholders[count][1])))){
+                    mapSearchParams.put(count,val);
+                    System.out.println("Search value: " + val);
+                }else {
+                    System.out.println("No Change to Search Box: "+count);
+                }
+                count ++;
+            }
+            Object [] sort = view.isSorted();
+            Object [][] results = model.getSearchResults(mapSearchParams,view.getTotalColumns(),sort);
+
+            if (results[0][0] != null){
+                view.updatePageLabel(model.getPage(), model.getMaxPage());
+                view.setTableData(results);
+                view.resetScroll();
+                view.setLoaded();
+            }else{
+                view.showError("No Results for this query");
+                view.clearTableData();
+            }
+        }else {
+            view.showError("Please Select A Database");
+        }
     }
 
     private void onSelectDb() {
@@ -40,9 +74,27 @@ public class ChooChooPlaneController {
         int result = fileChooser.showOpenDialog(view.getFrame());
 
         if (result == JFileChooser.APPROVE_OPTION) {
+            view.setLoading();
             File selectedFile = fileChooser.getSelectedFile();
-            view.getDbButton().setText((selectedFile).getName());
+            String extension = getFileExtension(selectedFile.getName());
+
+            if (Objects.equals(extension, "sqlite")) {
+                view.getDbButton().setText((selectedFile).getName());
+                model.setDb_url(selectedFile);
+                onSubmit();
+                view.setLoaded();
+                updateComboBox();
+            }else {
+                view.showError("This is not a SQL Lite DB");
+            }
         }
+    }
+    private String getFileExtension(String fileName) {
+        int lastIndex = fileName.lastIndexOf('.');
+        if (lastIndex > 0) {
+            return fileName.substring(lastIndex + 1);
+        }
+        return null; // No extension
     }
 
     private void onBack() {
@@ -50,15 +102,35 @@ public class ChooChooPlaneController {
         if (current > 1) {
             model.setPage(current - 1);
             view.updatePageLabel(model.getPage(), model.getMaxPage());
+            onSubmit();
         }
     }
+
+    private void updateComboBox(){
+        if (model.hasDB()){
+            view.setComboBox(model.getComboBoxResults());
+        }
+    }
+
+
 
     private void onNext() {
         int current = model.getPage();
         if (current < model.getMaxPage()) {
             model.setPage(current + 1);
             view.updatePageLabel(model.getPage(), model.getMaxPage());
+            onSubmit();
         }
+    }
+
+
+
+    private class TableHeaderSortHandler extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e){
+            onSubmit();
+        }
+
     }
 
     private class PaginationFocusHandler implements FocusListener {
@@ -70,6 +142,7 @@ public class ChooChooPlaneController {
         @Override
         public void focusLost(FocusEvent e) {
             updatePaginationFromField();
+            view.setHasPaginationRun(false);
         }
     }
 
@@ -84,17 +157,31 @@ public class ChooChooPlaneController {
     }
 
     private void updatePaginationFromField() {
-        String text = view.getPaginationField().getText();
-        try {
-            int val = Integer.parseInt(text);
-            if (val < 301) {
-                model.setPagination(val);
-                view.getPaginationField().setText("Results per Page " + val);
-            } else {
-                System.out.println("Value must be less than 301.");
+        boolean hasRun = view.getHasPaginationRun();
+        if (hasRun){
+            String text = view.getPaginationField().getText();
+            try {
+                int val = Integer.parseInt(text);
+                if ((val < 301)&& (val > 24)) {
+                    model.setPagination(val);
+                    view.getPaginationField().setText("Results per Page 25");
+                    onSubmit();
+                } else {
+                    view.getPaginationField().setText("Results per Page " + val);
+                    System.out.println("Value must be less than 301 or Greater than 24");
+                    view.showError("Value must be Above 24 or Bellow 301");
+                }
+            } catch (NumberFormatException ex) {
+                view.getPaginationField().setText("Results per Page 25");
+                System.out.println("Invalid number.");
+                view.showError("Invalid Number");
             }
-        } catch (NumberFormatException ex) {
-            System.out.println("Invalid number.");
+        }else
+        {
+            view.setHasPaginationRun(true);
         }
+
     }
+
+
 }
