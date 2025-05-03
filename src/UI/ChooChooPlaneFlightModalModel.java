@@ -2,63 +2,71 @@ package UI;
 
 import java.sql.*;
 
-
 public class ChooChooPlaneFlightModalModel {
 
-    private String dbUrl;
+    private final String dbUrl;
 
-    ChooChooPlaneFlightModalModel(String dbUrl) {
+    private static final String QUERY = """
+        SELECT
+            Flight.flight_number,
+            Flight.date,
+            AirportOrigin.name AS origin_airport_name,
+            AirportOrigin.iata_code AS origin_iata_code,
+            Flight.scheduled_departure,
+            Flight.actual_departure,
+            AirportDestination.name AS destination_airport_name,
+            AirportDestination.iata_code AS destination_iata_code,
+            Flight.scheduled_arrival,
+            Flight.actual_arrival,
+            Airline.name AS airline_name,
+            Flight.airline_code,
+            Delay_Reason.reason,
+            Delay_Reason.delay_length
+        FROM Flight
+        JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin
+        JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination
+        JOIN Airline ON Airline.iata_code = Flight.airline_code
+        LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id
+        WHERE date = ? AND flight_number = ?
+        """;
+
+    public ChooChooPlaneFlightModalModel(String dbUrl) {
         this.dbUrl = dbUrl;
     }
 
     public String[] getData(int date, int flightNum) {
-        try (Connection conn = DriverManager.getConnection(dbUrl)) {
-            PreparedStatement pstmt = conn.prepareStatement("SELECT\n" +
-                    "    Flight.flight_number,\n" +
-                    "    Flight.date,\n" +
-                    "    AirportOrigin.name AS origin_airport_name,\n" +
-                    "    AirportOrigin.iata_code as origin_iata_code,\n" +
-                    "    Flight.scheduled_departure,\n" +
-                    "    Flight.actual_departure,\n" +
-                    "    AirportDestination.name AS destination_airport_name,\n" +
-                    "    AirportDestination.iata_code AS destination_iata_code,\n" +
-                    "    Flight.scheduled_arrival,\n" +
-                    "    Flight.actual_arrival,\n" +
-                    "    Airline.name AS airline_name,\n" +
-                    "    Flight.airline_code,\n" +
-                    "    Delay_Reason.reason,\n" +
-                    "    Delay_Reason.delay_length\n" +
-                    "FROM Flight\n" +
-                    "         JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin\n" +
-                    "         JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination\n" +
-                    "         JOIN Airline ON Airline.iata_code = Flight.airline_code\n" +
-                    "         LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id\n" +
-                    "WHERE date = ? and flight_number = ?;");
+        try (Connection conn = DriverManager.getConnection(dbUrl);
+             PreparedStatement pstmt = conn.prepareStatement(QUERY)) {
 
             pstmt.setInt(1, date);
             pstmt.setInt(2, flightNum);
-            ResultSet rs = pstmt.executeQuery();
-            String[] data = new String[15];
-            while (rs.next()) {
-                data[0] = String.valueOf(rs.getInt("flight_number"));
-                data[1] = String.valueOf(rs.getInt("date"));
-                data[2] = rs.getString("origin_airport_name");
-                data[3] = rs.getString("origin_iata_code");
-                data[4] = rs.getString("scheduled_departure");
-                data[5] = rs.getString("actual_departure");
-                data[6] = rs.getString("destination_airport_name");
-                data[7] = rs.getString("destination_iata_code");
-                data[8] = rs.getString("scheduled_arrival");
-                data[9] = rs.getString("actual_arrival");
-                data[10] = rs.getString("airline_name");
-                data[11] = rs.getString("airline_code");
-                data[12] = rs.getString("reason");
-                data[13] = String.valueOf(rs.getInt("delay_length"));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new String[] {
+                            String.valueOf(rs.getInt("flight_number")),
+                            String.valueOf(rs.getInt("date")),
+                            rs.getString("origin_airport_name"),
+                            rs.getString("origin_iata_code"),
+                            rs.getString("scheduled_departure"),
+                            rs.getString("actual_departure"),
+                            rs.getString("destination_airport_name"),
+                            rs.getString("destination_iata_code"),
+                            rs.getString("scheduled_arrival"),
+                            rs.getString("actual_arrival"),
+                            rs.getString("airline_name"),
+                            rs.getString("airline_code"),
+                            rs.getString("reason"), // can be null
+                            rs.getString("delay_length") != null ? rs.getString("delay_length") : "" // handle null delay
+                    };
+                }
             }
-            return data;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error fetching flight data", e);
         }
+
+        // Return empty/default data if no result found
+        return new String[14];
     }
 }
