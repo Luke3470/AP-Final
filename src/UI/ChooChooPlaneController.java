@@ -1,6 +1,7 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableModel;
 import java.awt.event.*;
 import java.io.File;
@@ -22,21 +23,38 @@ public class ChooChooPlaneController {
         view.getDbButton().addActionListener(e -> onSelectDb());
         view.getBackButton().addActionListener(e -> onBack());
         view.getNextButton().addActionListener(e -> onNext());
-        view.getTableModel().addTableModelListener(e -> onRowSelect());
         view.getPaginationField().addFocusListener(new PaginationFocusHandler());
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
+        view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
     }
 
-    private void onRowSelect(){
-        int selectedRow = view.getTable().getSelectedRow();
-        String tempFlightNumber = view.getTable().getValueAt(selectedRow, 0).toString();
-        String tempDate = view.getTable().getValueAt(selectedRow, 1).toString();
+    private void onRowSelect(ListSelectionEvent e) {
 
-        int flightNumber = Integer.parseInt(tempFlightNumber);
-        int date = Integer.parseInt(tempDate);
-        ChooChooPlaneFlightModalController flightModal = new ChooChooPlaneFlightModalController(model.getDb_url(),date,flightNumber);
+        if (!e.getValueIsAdjusting()) {
+        
+            JTable table = view.getTable();
+            int selectedRow = table.getSelectedRow();
 
+            // Defensive: check if a row is actually selected and valid
+            if (selectedRow < 0 || selectedRow >= table.getRowCount()) {
+                return;
+            }
+
+            try {
+                int modelRow = table.convertRowIndexToModel(selectedRow);
+                String tempFlightNumber = table.getModel().getValueAt(modelRow, 0).toString();
+                String tempDate = table.getModel().getValueAt(modelRow, 1).toString();
+
+                int flightNumber = Integer.parseInt(tempFlightNumber);
+                int date = Integer.parseInt(tempDate);
+                ChooChooPlaneFlightModalController flightModal =
+                        new ChooChooPlaneFlightModalController(model.getDb_url(), date, flightNumber);
+            } catch (Exception err) {
+                System.err.println("Error processing row selection: " + err.getMessage());
+                throw new RuntimeException(err);
+            }
+        }
     }
 
 
@@ -73,6 +91,12 @@ public class ChooChooPlaneController {
                 view.setTableData(results);
                 view.resetScroll();
                 view.setLoaded();
+                view.clearTableSelection();
+                SwingUtilities.invokeLater(() -> {
+                    if (view.getTable().getRowCount() > 0) {
+                        view.getTable().setRowSelectionInterval(0, 0);
+                    }
+                });
             }else{
                 view.showError("No Results for this query");
                 view.clearTableData();
