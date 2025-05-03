@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Mass Refactor of UI Code to MVC">
+      <change afterPath="$PROJECT_DIR$/src/DataImporter/database.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AP-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AP-Project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/DB.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +37,9 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="k2qwvuco" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -55,13 +62,14 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/ljcad/IdeaProjects/AP-Project/lib/sqlite-jdbc-3.49.1.0.jar",
+    "last_opened_file_path": "C:/Users/ljcad/IdeaProjects/AP-Project",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/ljcad/IdeaProjects/AP-Project/src/DataImporter/Main.java",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -112,6 +120,14 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -130,6 +146,7 @@
       <workItem from="1746031547383" duration="3687000" />
       <workItem from="1746122632139" duration="16867000" />
       <workItem from="1746278881879" duration="10269000" />
+      <workItem from="1746304369317" duration="4560000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -222,14 +239,9 @@
           <option name="timeStamp" value="34" />
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneController.java</url>
-          <line>170</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneController.java</url>
-          <line>160</line>
-          <option name="timeStamp" value="52" />
+          <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="86" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

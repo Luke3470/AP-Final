@@ -244,6 +244,10 @@ public class ChooChooPlaneFlightModel {
         return has_db;
     }
 
+    public String getDb_url() {
+        return db_url;
+    }
+
     public String getCol(Object col){
         String str = col.toString();
         return switch (str) {

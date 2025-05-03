@@ -22,10 +22,23 @@ public class ChooChooPlaneController {
         view.getDbButton().addActionListener(e -> onSelectDb());
         view.getBackButton().addActionListener(e -> onBack());
         view.getNextButton().addActionListener(e -> onNext());
+        view.getTableModel().addTableModelListener(e -> onRowSelect());
         view.getPaginationField().addFocusListener(new PaginationFocusHandler());
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
     }
+
+    private void onRowSelect(){
+        int selectedRow = view.getTable().getSelectedRow();
+        String tempFlightNumber = view.getTable().getValueAt(selectedRow, 0).toString();
+        String tempDate = view.getTable().getValueAt(selectedRow, 1).toString();
+
+        int flightNumber = Integer.parseInt(tempFlightNumber);
+        int date = Integer.parseInt(tempDate);
+        ChooChooPlaneFlightModalController flightModal = new ChooChooPlaneFlightModalController(model.getDb_url(),date,flightNumber);
+
+    }
+
 
     private void onSubmit() {
         if (model.hasDB()) {
@@ -158,16 +171,19 @@ public class ChooChooPlaneController {
 
     private void updatePaginationFromField() {
         boolean hasRun = view.getHasPaginationRun();
-        if (hasRun){
+        if (!hasRun){
             String text = view.getPaginationField().getText();
             try {
+                view.setHasPaginationRun(true);
                 int val = Integer.parseInt(text);
                 if ((val < 301)&& (val > 24)) {
                     model.setPagination(val);
-                    view.getPaginationField().setText("Results per Page 25");
-                    onSubmit();
+                    view.getPaginationField().setText("Results per Page "+val );
+                    if(model.hasDB()) {
+                        onSubmit();
+                    }
                 } else {
-                    view.getPaginationField().setText("Results per Page " + val);
+                    view.getPaginationField().setText("Results per Page 25");
                     System.out.println("Value must be less than 301 or Greater than 24");
                     view.showError("Value must be Above 24 or Bellow 301");
                 }
@@ -176,9 +192,6 @@ public class ChooChooPlaneController {
                 System.out.println("Invalid number.");
                 view.showError("Invalid Number");
             }
-        }else
-        {
-            view.setHasPaginationRun(true);
         }
 
     }
