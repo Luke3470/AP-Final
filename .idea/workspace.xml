@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Mass Refactor of UI Code to MVC">
+    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="Refactor">
       <change afterPath="$PROJECT_DIR$/src/DataImporter/database.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AP-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AP-Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +47,7 @@
     "Application.GridBagLayoutDemo.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.UI.Main.executor": "Run",
-    "Application.UI.executor": "Debug",
+    "Application.UI.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -146,7 +137,7 @@
       <workItem from="1746031547383" duration="3687000" />
       <workItem from="1746122632139" duration="16867000" />
       <workItem from="1746278881879" duration="10269000" />
-      <workItem from="1746304369317" duration="4560000" />
+      <workItem from="1746304369317" duration="5107000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -204,7 +195,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746051228102</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Modal added">
+      <option name="closed" value="true" />
+      <created>1746309030504</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746309030504</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Refactor">
+      <option name="closed" value="true" />
+      <created>1746309136392</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746309136392</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,7 +236,9 @@
     <MESSAGE value="code made better" />
     <MESSAGE value="Mass Refactor of UI Code" />
     <MESSAGE value="Mass Refactor of UI Code to MVC" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mass Refactor of UI Code to MVC" />
+    <MESSAGE value="Modal added" />
+    <MESSAGE value="Refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -240,7 +249,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java</url>
-          <line>51</line>
+          <line>53</line>
           <option name="timeStamp" value="86" />
         </line-breakpoint>
       </breakpoints>
