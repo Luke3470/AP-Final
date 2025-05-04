@@ -1,7 +1,6 @@
 package UI.main;
 
 import UI.Graph.ChooChooPlaneGraphController;
-import UI.Graph.ChooChooPlaneGraphModel;
 import UI.Modal.ChooChooPlaneFlightModalController;
 
 import javax.swing.*;
@@ -30,18 +29,18 @@ public class ChooChooPlaneController {
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
         view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
-        view.getAirlineGraphButton().addActionListener(e -> createGraphTile(new int[]{0, 1}));
-        view.getAirportGraphButton().addActionListener(e ->createGraphTile(new int[]{3, 4}));
+        view.getAirportGraphButton().addActionListener(e -> createGraphTile(new int[]{0, 1}));
+        view.getAirlineGraphButton().addActionListener(e ->createGraphTile(new int[]{3, 4}));
         view.getTimeGraphButton().addActionListener(e ->createGraphTile(new int[]{5, 6}));
     }
 
     private String[][] getFilteredFields(int[] required){
-        Map<Integer,String> setSearchParams = setSearchParams();
+        Map<Integer,String> SearchParams = setSearchParams();
 
         String [][] filters = new String[2][2];
 
         for(int i=0;i<required.length;i++){
-          filters[i][0] = setSearchParams.get(required[i]);
+          filters[i][0] = SearchParams.get(required[i]);
           filters[i][1] = String.valueOf(required[i]);
         }
         return filters;

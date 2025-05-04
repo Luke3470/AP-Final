@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="All that is left is graph, Mass refactor, Changed File structure">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/java.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/jfree_jfreechart.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AP-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AP-Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Utils/Graph.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/main/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/main/ChooChooPlaneController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +55,7 @@
     "Application.GridBagLayoutDemo.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.UI.Main.executor": "Run",
-    "Application.UI.executor": "Run",
+    "Application.UI.executor": "Debug",
     "Downloaded.Files.Path.Enabled": "false",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
@@ -99,7 +96,7 @@
       <recent name="UI" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.UI">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DataImporter.Main" />
       <module name="AP-Project" />
@@ -309,6 +306,11 @@
           <properties class="java.lang.ArrayIndexOutOfBoundsException" package="java.lang" />
           <option name="timeStamp" value="34" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/UI/Graph/ChooChooPlaneGraphView.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

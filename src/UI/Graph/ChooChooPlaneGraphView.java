@@ -42,12 +42,11 @@ public class ChooChooPlaneGraphView extends JFrame {
 
     private void addToDataSet(Object[][] data) {
         for (Object[] row : data) {
-            if (row.length >= 3 && row[0] instanceof Number && row[1] instanceof String && row[2] instanceof String) {
-                Number value = (Number) row[0];
-                String rowKey = (String) row[1];
-                String columnKey = (String) row[2];
-                graphData.addValue(value, rowKey, columnKey);
-            }
+            Number value = (Number) row[0];
+            Comparable rowKey = (Comparable) row[1];
+            Comparable columnKey = (Comparable) row[2];
+
+            graphData.addValue(value, rowKey, columnKey);
         }
     }
 }
