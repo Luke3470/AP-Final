@@ -51,10 +51,10 @@ public class ChooChooPlaneController {
     private void createGraphTile(int [] requiredFields){
         if(model.hasDB()) {
             String xAxis = "Delay Time";
-            String yAxis = "Total";
+            String yAxis = "Amount of Flights Total";
             String title = "Bar Chart of";
             String[][] fields = getFilteredFields(requiredFields);
-            title = title + " - " + fields[0][1] + " - " + fields[1][1];
+            title = title + " - " + fields[0][0] + " - " + fields[0][1];
                 ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(), fields,
                         title, xAxis, yAxis,view
                 );
