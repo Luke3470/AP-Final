@@ -1,6 +1,7 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
@@ -21,21 +22,36 @@ public class ChooChooPlaneController {
         view.getDbButton().addActionListener(e -> onSelectDb());
         view.getBackButton().addActionListener(e -> onBack());
         view.getNextButton().addActionListener(e -> onNext());
-        view.getTableModel().addTableModelListener(e -> onRowSelect());
         view.getPaginationField().addFocusListener(new PaginationFocusHandler());
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
+        view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
     }
 
-    private void onRowSelect(){
-        int selectedRow = view.getTable().getSelectedRow();
-        String tempFlightNumber = view.getTable().getValueAt(selectedRow, 0).toString();
-        String tempDate = view.getTable().getValueAt(selectedRow, 1).toString();
+    private void onRowSelect(ListSelectionEvent e ){
+        if (!e.getValueIsAdjusting()) {
 
-        int flightNumber = Integer.parseInt(tempFlightNumber);
-        int date = Integer.parseInt(tempDate);
-        ChooChooPlaneFlightModalController flightModal = new ChooChooPlaneFlightModalController(model.getDb_url(),date,flightNumber);
+            JTable table = view.getTable();
+            int selectedRow = table.getSelectedRow();
 
+            if (selectedRow < 0 || selectedRow >= table.getRowCount()) {
+                return;
+            }
+
+            try {
+                int modelRow = table.convertRowIndexToModel(selectedRow);
+                String tempFlightNumber = table.getModel().getValueAt(modelRow, 0).toString();
+                String tempDate = table.getModel().getValueAt(modelRow, 1).toString();
+
+                int flightNumber = Integer.parseInt(tempFlightNumber);
+                int date = Integer.parseInt(tempDate);
+                ChooChooPlaneFlightModalController flightModal =
+                        new ChooChooPlaneFlightModalController(model.getDb_url(), date, flightNumber);
+            } catch (Exception err) {
+                System.err.println("Error processing row selection: " + err.getMessage());
+                throw new RuntimeException(err);
+            }
+        }
     }
 
 
