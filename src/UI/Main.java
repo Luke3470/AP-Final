@@ -1,5 +1,8 @@
 package UI;
 
+import UI.main.ChooChooPlaneController;
+import UI.main.ChooChooPlaneFlightModel;
+import UI.main.ChooChooPlaneView;
 
 import javax.swing.*;
 

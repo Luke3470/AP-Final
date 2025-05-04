@@ -1,4 +1,4 @@
-package UI;
+package UI.main;
 
 import UI.Utils.PlaceholderTextField;
 
@@ -52,7 +52,7 @@ public class ChooChooPlaneView {
             {"1O","\\d{1,4}"},
             {"None",".*"}};
 
-    ChooChooPlaneView () {
+    public ChooChooPlaneView () {
         createAndShowGUI();
     }
     private void createAndShowGUI() {

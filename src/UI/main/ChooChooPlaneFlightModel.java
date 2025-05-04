@@ -1,4 +1,4 @@
-package UI;
+package UI.main;
 
 import java.io.File;
 import java.sql.*;
@@ -111,7 +111,7 @@ public class ChooChooPlaneFlightModel {
                 switch (column) {
                     case "flight_origin":
                     case "flight_destination":
-                    case "airline_name":
+                    case "Airline.name":
                     case "airline_code":
                         value = "%"+value+"%";
                         condition = column + " LIKE ?";
@@ -227,7 +227,7 @@ public class ChooChooPlaneFlightModel {
         valueLookup.put(0,"flight_origin");
         valueLookup.put(1,"flight_destination");
         valueLookup.put(2,"flight_number");
-        valueLookup.put(3,"airline_name");
+        valueLookup.put(3,"Airline.name");
         valueLookup.put(4,"airline_code");
         valueLookup.put(5,"start_date");
         valueLookup.put(6,"end_date");

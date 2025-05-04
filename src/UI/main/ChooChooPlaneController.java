@@ -1,4 +1,6 @@
-package UI;
+package UI.main;
+
+import UI.Modal.ChooChooPlaneFlightModalController;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

@@ -3,6 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/DataImporter/DB.java" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/src/DataImporter/DI.java" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/UI/main/ChooChooPlaneFlightModel.java" dialect="GenericSQL" />
   </component>
 </project>

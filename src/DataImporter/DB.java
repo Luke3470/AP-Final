@@ -24,15 +24,22 @@ public class DB {
             stmt.executeUpdate("CREATE INDEX idx_flight_origin ON Flight(flight_origin);");
             stmt.executeUpdate("CREATE INDEX idx_flight_destination ON Flight(flight_destination);");
             stmt.executeUpdate("CREATE INDEX idx_flight_date ON Flight(date);");
+            stmt.executeUpdate("CREATE INDEX idx_flight_flight_number on Flight(flight_number)");
+            stmt.executeUpdate("CREATE INDEX idx_flight_date_flight_num ON Flight(date,flight_number);");
+
 
             // Indexes for Delay_Reason table
             stmt.executeUpdate("CREATE INDEX idx_delay_flight_id ON Delay_Reason(flight_id);");
             stmt.executeUpdate("CREATE INDEX idx_delay_length ON Delay_Reason(delay_length);");
             stmt.executeUpdate("CREATE INDEX idx_delay_reason ON Delay_Reason(reason);");
 
-            //Airline Airport
+            //Airline
             stmt.executeUpdate("CREATE INDEX idx_airline_name ON Airline(name);");
+            stmt.executeUpdate("CREATE INDEX idx_airline_iata_code ON Airline(iata_code);");
+
+            //Airport
             stmt.executeUpdate("CREATE INDEX idx_airport_name ON Airport(name);");
+            stmt.executeUpdate("CREATE INDEX idx_airport_iata_code ON Airport(iata_code);");
 
 
         } catch (SQLException e) {

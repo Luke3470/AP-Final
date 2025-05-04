@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="All that is left is graph, Mass refactor, Fix Date search">
+    <list default="true" id="9c14bebc-4163-42cd-8332-921056bc997e" name="Changes" comment="All that is left is graph, Mass refactor">
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataImporter/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataImporter/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/main/ChooChooPlaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Modal/ChooChooPlaneFlightModalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Modal/ChooChooPlaneFlightModalModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModalView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Modal/ChooChooPlaneFlightModalView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneFlightModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/main/ChooChooPlaneFlightModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/ChooChooPlaneView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/main/ChooChooPlaneView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +89,7 @@
       <recent name="UI" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.UI">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DataImporter.Main" />
       <module name="AP-Project" />
@@ -229,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746358585083</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="All that is left is graph, Mass refactor">
+      <option name="closed" value="true" />
+      <created>1746359566637</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746359566637</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,9 +271,9 @@
     <MESSAGE value="Mass Refactor of UI Code to MVC" />
     <MESSAGE value="Modal added" />
     <MESSAGE value="Refactor" />
-    <MESSAGE value="All that is left is graph, Mass refactor" />
     <MESSAGE value="All that is left is graph, Mass refactor, Fix Date search" />
-    <option name="LAST_COMMIT_MESSAGE" value="All that is left is graph, Mass refactor, Fix Date search" />
+    <MESSAGE value="All that is left is graph, Mass refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="All that is left is graph, Mass refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
