@@ -41,6 +41,9 @@ public class DB {
             stmt.executeUpdate("CREATE INDEX idx_airport_name ON Airport(name);");
             stmt.executeUpdate("CREATE INDEX idx_airport_iata_code ON Airport(iata_code);");
 
+            //Indexes for Graphs
+            stmt.executeUpdate("CREATE INDEX idx_delay_reason_flight_delay on Delay_Reason(flight_id,delay_length)");
+
 
         } catch (SQLException e) {
             dropTables();

@@ -1,5 +1,7 @@
 package UI.main;
 
+import UI.Graph.ChooChooPlaneGraphController;
+import UI.Graph.ChooChooPlaneGraphModel;
 import UI.Modal.ChooChooPlaneFlightModalController;
 
 import javax.swing.*;
@@ -28,6 +30,35 @@ public class ChooChooPlaneController {
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
         view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
+        view.getAirlineGraphButton().addActionListener(e -> createGraphTile(new int[]{0, 1}));
+        view.getAirportGraphButton().addActionListener(e ->createGraphTile(new int[]{3, 4}));
+        view.getTimeGraphButton().addActionListener(e ->createGraphTile(new int[]{5, 6}));
+    }
+
+    private String[][] getFilteredFields(int[] required){
+        Map<Integer,String> setSearchParams = setSearchParams();
+
+        String [][] filters = new String[2][2];
+
+        for(int i=0;i<required.length;i++){
+          filters[i][0] = setSearchParams.get(required[i]);
+          filters[i][1] = String.valueOf(required[i]);
+        }
+        return filters;
+    }
+
+
+
+    private void createGraphTile(int [] requiredFields){
+        String xAxis = "Delay Time";
+        String yAxis = "Total";
+        String title = "Bar Chart of";
+        String [][] fields = getFilteredFields(requiredFields);
+
+        ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),fields,
+                title,xAxis,yAxis
+        );
+
     }
 
     private void onRowSelect(ListSelectionEvent e ){
@@ -65,26 +96,7 @@ public class ChooChooPlaneController {
             view.setLoading();
 
             // Collect search values and perform actions
-            String [][] placeholders = view.getPlaceholders();
-            Map<Integer,String> mapSearchParams = new HashMap<>();
-            var fields = view.getSearchFields();
-            int count = 0;
-            String val;
-
-            for (JComponent field : fields) {
-                if (field instanceof JTextField) {
-                    val = ((JTextField) field).getText();
-                }else{
-                    val = (String) ((JComboBox<?>) field).getSelectedItem();
-                }
-                if (((val != null) && (!Objects.equals(placeholders[count][0], val)) && (val.matches(placeholders[count][1])))){
-                    mapSearchParams.put(count,val);
-                    System.out.println("Search value: " + val);
-                }else {
-                    System.out.println("No Change to Search Box: "+count);
-                }
-                count ++;
-            }
+            Map<Integer,String> mapSearchParams = setSearchParams();
             Object [] sort = view.isSorted();
             Object [][] results = model.getSearchResults(mapSearchParams,view.getTotalColumns(),sort);
 
@@ -100,6 +112,30 @@ public class ChooChooPlaneController {
         }else {
             view.showError("Please Select A Database");
         }
+    }
+
+    private Map<Integer,String> setSearchParams(){
+        String [][] placeholders = view.getPlaceholders();
+        Map<Integer,String> mapSearchParams = new HashMap<>();
+        var fields = view.getSearchFields();
+        int count = 0;
+        String val;
+
+        for (JComponent field : fields) {
+            if (field instanceof JTextField) {
+                val = ((JTextField) field).getText();
+            }else{
+                val = (String) ((JComboBox<?>) field).getSelectedItem();
+            }
+            if (((val != null) && (!Objects.equals(placeholders[count][0], val)) && (val.matches(placeholders[count][1])))){
+                mapSearchParams.put(count,val);
+                System.out.println("Search value: " + val);
+            }else {
+                System.out.println("No Change to Search Box: "+count);
+            }
+            count ++;
+        }
+        return mapSearchParams;
     }
 
     private void onSelectDb() {
