@@ -123,9 +123,17 @@ public class ChooChooPlaneFlightModel {
                         break;
                     case "delay_length":
                     case "flight_number":
-                    case "date":
                         paramValues.add(Integer.parseInt(value));
                         condition = column + " = ?";
+                        break;
+                    case "start_date":
+                    case "end_date":
+                        paramValues.add(Integer.parseInt(value));
+                        if (column.equals("start_date")) {
+                            condition = "date >= ?";
+                        }else {
+                            condition = "date <= ?";
+                        }
                         break;
                     default:
                         continue;
@@ -221,8 +229,8 @@ public class ChooChooPlaneFlightModel {
         valueLookup.put(2,"flight_number");
         valueLookup.put(3,"airline_name");
         valueLookup.put(4,"airline_code");
-        valueLookup.put(5,"date");
-        valueLookup.put(6,"date");
+        valueLookup.put(5,"start_date");
+        valueLookup.put(6,"end_date");
         valueLookup.put(7,"delay_length");
         valueLookup.put(8,"reason");
         return valueLookup;

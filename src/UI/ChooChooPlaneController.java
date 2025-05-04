@@ -18,7 +18,7 @@ public class ChooChooPlaneController {
     }
 
     private void initController() {
-        view.getSubmitButton().addActionListener(e -> onSubmit());
+        view.getSubmitButton().addActionListener(e -> submitButton());
         view.getDbButton().addActionListener(e -> onSelectDb());
         view.getBackButton().addActionListener(e -> onBack());
         view.getNextButton().addActionListener(e -> onNext());
@@ -54,7 +54,10 @@ public class ChooChooPlaneController {
         }
     }
 
-
+    private void submitButton(){
+        model.setPage(1);
+        onSubmit();
+    }
     private void onSubmit() {
         if (model.hasDB()) {
             view.setLoading();
@@ -192,6 +195,7 @@ public class ChooChooPlaneController {
                 view.setHasPaginationRun(true);
                 int val = Integer.parseInt(text);
                 if ((val < 301)&& (val > 24)) {
+                    model.setPage(1);
                     model.setPagination(val);
                     view.getPaginationField().setText("Results per Page "+val );
                     if(model.hasDB()) {
