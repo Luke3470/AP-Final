@@ -49,15 +49,18 @@ public class ChooChooPlaneController {
 
 
     private void createGraphTile(int [] requiredFields){
-        String xAxis = "Delay Time";
-        String yAxis = "Total";
-        String title = "Bar Chart of";
-        String [][] fields = getFilteredFields(requiredFields);
-
-        ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),fields,
-                title,xAxis,yAxis
-        );
-
+        if(model.hasDB()) {
+            String xAxis = "Delay Time";
+            String yAxis = "Total";
+            String title = "Bar Chart of";
+            String[][] fields = getFilteredFields(requiredFields);
+            title = title + " - " + fields[0][1] + " - " + fields[1][1];
+                ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(), fields,
+                        title, xAxis, yAxis,view
+                );
+        }else {
+            view.showError("Please select a database");
+        }
     }
 
     private void onRowSelect(ListSelectionEvent e ){

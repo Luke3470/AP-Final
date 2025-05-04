@@ -1,5 +1,6 @@
 package UI.Graph;
 
+import UI.main.ChooChooPlaneView;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,30 +15,35 @@ public class ChooChooPlaneGraphView extends JFrame {
     private String ylabel;
     private DefaultCategoryDataset graphData;
 
-    public ChooChooPlaneGraphView(String graphTitle, String xlabel, String ylabel, Object[][] data) {
+    public ChooChooPlaneGraphView(String graphTitle, String xlabel, String ylabel, Object[][] data, ChooChooPlaneView error) {
         this.graphTitle = graphTitle;
         this.xlabel = xlabel;
         this.ylabel = ylabel;
         this.graphData = new DefaultCategoryDataset();
 
-        addToDataSet(data);
+        if (data != null) {
 
-        JFreeChart barChart = ChartFactory.createBarChart(
-                this.graphTitle,
-                this.xlabel,
-                this.ylabel,
-                this.graphData
-        );
+            addToDataSet(data);
 
-        ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-        setContentPane(chartPanel);
+            JFreeChart barChart = ChartFactory.createBarChart(
+                    this.graphTitle,
+                    this.xlabel,
+                    this.ylabel,
+                    this.graphData
+            );
 
-        setTitle(this.graphTitle);
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
+            ChartPanel chartPanel = new ChartPanel(barChart);
+            chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+            setContentPane(chartPanel);
+
+            setTitle(graphTitle);
+            setSize(800, 600);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setVisible(true);
+        }else {
+            error.showError("No data found");
+        }
     }
 
     private void addToDataSet(Object[][] data) {
