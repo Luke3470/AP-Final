@@ -54,7 +54,6 @@ public class ChooChooPlaneView {
 
     ChooChooPlaneView () {
         createAndShowGUI();
-        this.hasPaginationRun = false;
     }
     private void createAndShowGUI() {
         frame = new JFrame("Choo Choo Plane");
@@ -274,6 +273,9 @@ public class ChooChooPlaneView {
         table.setRowSorter(newSorter);
     }
 
+    public void clearTableSelection() {
+        table.clearSelection();
+    }
     public Object[][] removeNullRows(Object[][] input) {
         return Arrays.stream(input)
                 .filter(row -> row != null && Arrays.stream(row).anyMatch(Objects::nonNull))
