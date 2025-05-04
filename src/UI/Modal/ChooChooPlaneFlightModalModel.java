@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class ChooChooPlaneFlightModalModel {
 
-    private final String dbUrl;
+    private final String dbURL;
 
-    private static final String QUERY = """
+    private static final String query = """
         SELECT
             Flight.flight_number,
             Flight.date,
@@ -30,13 +30,31 @@ public class ChooChooPlaneFlightModalModel {
         WHERE date = ? AND flight_number = ?
         """;
 
-    public ChooChooPlaneFlightModalModel(String dbUrl) {
-        this.dbUrl = dbUrl;
+    /**
+     * Sets the Connection URL for the Database using same connection string as selected in flight view and set in Flight Modal
+     * The db_url argument Must give a sqllite Database connection string
+     *
+     * @param dbURL Same Connection string as database selected in main view
+     * @see ChooChooPlaneFlightModalModel
+     * @see ChooChooPlaneFlightModalView
+     */
+    public ChooChooPlaneFlightModalModel(String dbURL) {
+        this.dbURL = dbURL;
     }
 
+
+    /**
+     * Collects all data about specific flight in the database
+     * Using JDBC to query and collect data about a specific record
+     * @param date Date of the selected record used a composite key to find correct DB entry
+     * @param flightNum flight_number of the selected record used a composite key to find correct DB entry
+     * @return Returns String array in order to populate the modal created in the Modal View
+     * @see ChooChooPlaneFlightModalView
+     * @see org.sqlite.JDBC
+     */
     public String[] getData(int date, int flightNum) {
-        try (Connection conn = DriverManager.getConnection(dbUrl);
-             PreparedStatement pstmt = conn.prepareStatement(QUERY)) {
+        try (Connection conn = DriverManager.getConnection(dbURL);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, date);
             pstmt.setInt(2, flightNum);
@@ -56,7 +74,7 @@ public class ChooChooPlaneFlightModalModel {
                             rs.getString("actual_arrival"),
                             rs.getString("airline_name"),
                             rs.getString("airline_code"),
-                            rs.getString("reason"), // can be null
+                            rs.getString("reason"),
                             rs.getString("delay_length") != null ? rs.getString("delay_length") : "" // handle null delay
                     };
                 }

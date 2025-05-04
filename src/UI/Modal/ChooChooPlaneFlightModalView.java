@@ -5,10 +5,25 @@ import java.awt.*;
 
 public class ChooChooPlaneFlightModalView {
 
+    /**
+     * Calls createGUI Which using a JFrame formats data provided by the data Model for the modal
+     * a String array of data must be passed in the correct order to allow for formatting to match the assigned labels
+     * <p>
+     * method will return the GUI impediment when called as all correct information will be passed
+     *
+     * @param data String Array containing all data on a specific flight Ordered correctly
+     * @see ChooChooPlaneFlightModalModel
+     * */
     public ChooChooPlaneFlightModalView(String[] data) {
         createGUI(data);
     }
 
+    /**
+     * Creates and organised GUI for pop up model using GridBagConstraints
+     * Method Creates Visible GUI
+     * @param data String Array containing all data on a specific flight Ordered correctly
+     * @see GridBagConstraints
+     */
     public void createGUI(String[] data) {
         String[] labels = {
                 "Flight Number", "Date", "Departure Airport Name", "Departure Airport IATA",
@@ -18,7 +33,7 @@ public class ChooChooPlaneFlightModalView {
         };
 
         JFrame frame = new JFrame("Choo Choo Flight");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // So it doesn't exit the whole app
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container pane = frame.getContentPane();
 
         try {
@@ -40,20 +55,20 @@ public class ChooChooPlaneFlightModalView {
 
             c.gridx = 1;
             JTextField textField = new JTextField(data[i]);
-            textField.setEditable(false); // Optional: make it read-only
+            textField.setEditable(false);
             pane.add(textField, c);
         }
 
-        // Add Close Button
         c.gridx = 1;
         c.gridy = labels.length + 1;
         JButton closeButton = new JButton("Close");
         pane.add(closeButton, c);
 
         closeButton.addActionListener(e -> frame.dispose());
-
         frame.pack();
-        frame.setLocationRelativeTo(null); // Center on screen
+
+        // Center on screen
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
