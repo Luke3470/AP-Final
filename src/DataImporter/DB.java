@@ -5,6 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Class To handle DB Creation
+ *
+ * @author Luke Cadman
+ */
 public class DB {
 
     final private String DB_URL = "jdbc:sqlite:C:\\Users\\ljcad\\IdeaProjects\\AP-Project\\src\\DataImporter\\database.sqlite";
@@ -17,6 +22,9 @@ public class DB {
         createTables();
     }
 
+    /**
+     * Creates Db Index's
+     */
     public void createIndex() {
         try (Statement stmt = getStmt()) {
             // Indexes for Flight table
@@ -52,6 +60,9 @@ public class DB {
         }
     }
 
+    /**
+     * Removes all tables
+     */
     public void dropTables() {
         //Drop all Tables
         try (Statement stmt = getStmt()) {
@@ -67,6 +78,9 @@ public class DB {
         }
     }
 
+    /**
+     * Creates all tables
+     */
     public void createTables() {
         try (Statement stmt = getStmt()) {
             stmt.executeUpdate("CREATE TABLE Airline(" +
@@ -119,12 +133,23 @@ public class DB {
         }
     }
 
+    /**
+     * Creates Statement
+     * @return SQl statement
+     * @throws SQLException as this is handled when called
+     * @see Statement
+     */
     public Statement getStmt() throws SQLException {
         Connection conn = DriverManager.getConnection(getDB_URL());
         return conn.createStatement();
 
     }
-
+    /**
+     * Creates Connection
+     * @return SQL Connection
+     * @throws SQLException as this is handled when called
+     * @see Connection
+     */
     public Connection getConn() throws SQLException {
         return DriverManager.getConnection(getDB_URL());
     }

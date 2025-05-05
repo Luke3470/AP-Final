@@ -13,7 +13,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
 
-
+/**
+ * Class that handles the CSV to SQLite DB parsing
+ *
+ * @author Luke Cadman
+ */
 public class DI {
 
     private Path csvpath;
@@ -27,6 +31,12 @@ public class DI {
         setCsvPath(Path.of(System.getProperty("user.dir") + "\\lib\\Data\\flights_sample_3m.csv"));
     }
 
+    /**
+     * Main Import logic happens
+     * Creation of batches
+     * Calling data Validation
+     * Progress Reports
+     */
     public void startImport(Connection connection) throws IncorrectFilePathException {
 
         //Creates Connection to file
@@ -116,14 +126,24 @@ public class DI {
     }
 
 
-    //Combo class used to make data returns easier
+    /**
+     * Helper class made so that validation and parsing can happen once method
+     */
     public static class Combo {
         Boolean valid;
         String[] data;
 
     }
 
-
+    /**
+     * Checks if row of CSV is Valid
+     *
+     * @param Line line of CSV data from Buffered Reader
+     * @param count Count of current line used to report which line has failed and why
+     * @return Returns a combo object containing used strings and whether data is valid or not
+     * @see Combo
+     * @see BufferedReader
+     */
     public Combo isValid(String Line, Integer count) {
 
         //Used to Parse CSV Which contains ,'s
@@ -133,7 +153,7 @@ public class DI {
         int len = data.length;
         data = Arrays.stream(data).map(s -> s.replace("\"", "")).toList().toArray(new String[len]);
 
-        //Combo as tuple so validation and correction happen together (Python would have been useful)
+        //Combo as tuple so validation and correction happen together (Python would have been useful Don't hate me)
         Combo data_cleaned = new Combo();
         data_cleaned.data = new String[14];
         data_cleaned.valid = false;
@@ -208,11 +228,11 @@ public class DI {
             }
         }
 
-        //Assign Data to a cleaned small Array for Simplicity
+        //Assign Data to a cleaned smaller Array for Simplicity
         data_cleaned.valid = true;
         //Date
         data_cleaned.data[0] = data[0];
-        //AirLine Name
+        //Airline Name
         data_cleaned.data[1] = data[1];
         //Airline Code
         data_cleaned.data[2] = data[3];
@@ -251,16 +271,25 @@ public class DI {
     }
 
 
-    //Validation Functions
-
+    /**
+     * Due to it not being efficient converting all to time objects this is used to parse int time into minutes
+     * to get the delay
+     * @param timeStr String time in the format HHMM
+     * @return Minutes
+     */
     private int convertToMinutes(String timeStr) {
-        // Handle times like "930", "1430", "1500"
         int hours = Integer.parseInt(timeStr.substring(0, timeStr.length() - 2));
         int minutes = Integer.parseInt(timeStr.substring(timeStr.length() - 2));
 
-        return hours * 60 + minutes;  // Convert hours to minutes and add minutes
+        return hours * 60 + minutes;
     }
 
+    /**
+     * get the difference in minutes
+     * @param expectedStr Expected arrival time in format HHMM
+     * @param actualStr Actual arrival time in format HHMM
+     * @return Difference in minutes
+     */
     public int calculateDelay(String expectedStr, String actualStr) {
 
         int expectedMinutes = convertToMinutes(expectedStr);
@@ -279,6 +308,7 @@ public class DI {
         return delay;
     }
 
+    // Validation Functions
     private boolean isValidDate(String date) {
         return date.matches("(2019|2020|2021|2022|2023)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])");
     }
@@ -295,6 +325,7 @@ public class DI {
         return code.matches("[A-Z]{3}");
     }
 
+    //Data Formatting when leading 0 are lost
     private String formatTime(String time) {
         time = time.replace(".0", "");
         while (time.length() < 4) {
@@ -303,6 +334,11 @@ public class DI {
         return time;
     }
 
+    /**
+     * Searches the given array to return string containing all delay reasons
+     * @param data row of split CSV data
+     * @return Delay Reason
+     */
     private String getDelayReason(String[] data) {
         StringBuilder reasonBuilder = new StringBuilder();
         for (int i = 27; i <= 31; i++) {

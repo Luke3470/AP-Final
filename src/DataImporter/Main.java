@@ -5,6 +5,10 @@ import exceptions.IncorrectFilePathException;
 
 import java.sql.SQLException;
 
+/**
+ * Main Data Import Decorations
+ * @author Luke Cadman
+ */
 public class Main {
     public static void main(String[] args) throws DataBaseConnectionException {
 
