@@ -6,6 +6,11 @@ import UI.main.ChooChooPlaneView;
 
 import javax.swing.*;
 
+/**
+ * Main where GUI is initialised
+ *
+ * @author Luke Cadman
+ */
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

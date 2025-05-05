@@ -9,6 +9,10 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.*;
 
+/**
+ * Class that creates Controller for the Main GUI body all events that are triggered go through this controller
+ * @author Luke Cadman
+ */
 public class ChooChooPlaneController {
     private final ChooChooPlaneView view;
     private final ChooChooPlaneFlightModel model;
@@ -16,10 +20,12 @@ public class ChooChooPlaneController {
     public ChooChooPlaneController(ChooChooPlaneView view, ChooChooPlaneFlightModel model) {
         this.view = view;
         this.model = model;
-        // Register all listeners
         initController();
     }
 
+    /**
+     * All Listeners Registered
+     */
     private void initController() {
         view.getSubmitButton().addActionListener(e -> submitButton());
         view.getDbButton().addActionListener(e -> onSelectDb());
@@ -34,6 +40,9 @@ public class ChooChooPlaneController {
         view.getClearButton().addActionListener(e ->resetSearch());
     }
 
+    /**
+     * Resets all Search results to there set placeholder value
+     */
     private void resetSearch(){
         String[][] values = view.getPlaceholders();
         List<JComponent> fields = view.getSearchFields();
@@ -52,6 +61,10 @@ public class ChooChooPlaneController {
         view.getClearButton().grabFocus();
     }
 
+
+    /**
+     * Creates Bar graph From current Select Filters
+     */
     private void createBarGraph(){
         if(model.hasDB()) {
             String xAxis = "Delay Time";
@@ -69,7 +82,9 @@ public class ChooChooPlaneController {
         }
     }
 
-
+    /**
+     * Creates Line graph From current Select Filters
+     */
     private void createLineGraph(){
         if(model.hasDB()) {
             String xAxis = "Average Delay Time";
@@ -85,6 +100,10 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * When a row is selected Create a Modal for it
+     * @param e event used to find specific row selected
+     */
     private void onRowSelect(ListSelectionEvent e ){
         if (!e.getValueIsAdjusting()) {
 
@@ -111,10 +130,18 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * Starts a DB query Based of current Search Params and resets page to 0
+     */
     private void submitButton(){
         model.setPage(1);
         onSubmit();
     }
+
+    /**
+     * Search database And populate main table
+     * Using current Search Params
+     */
     private void onSubmit() {
         if (model.hasDB()) {
             view.setLoading();
@@ -138,6 +165,11 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * Compares what is the Text in fields to their placeholder value to see if they have changed
+     *
+     * @return Map of Changed Filters
+     */
     private Map<Integer,String> setSearchParams(){
         String [][] placeholders = view.getPlaceholders();
         Map<Integer,String> mapSearchParams = new HashMap<>();
@@ -164,6 +196,9 @@ public class ChooChooPlaneController {
         return mapSearchParams;
     }
 
+    /**
+     * Once Db iis selected Checks it valid and if so sets it as the models DB
+     */
     private void onSelectDb() {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         int result = fileChooser.showOpenDialog(view.getFrame());
@@ -184,6 +219,12 @@ public class ChooChooPlaneController {
             }
         }
     }
+
+    /**
+     * Used to get file Extension for File Confirmation
+     * @param fileName Full Name of file
+     * @return Files Extension
+     */
     private String getFileExtension(String fileName) {
         int lastIndex = fileName.lastIndexOf('.');
         if (lastIndex > 0) {
@@ -192,6 +233,9 @@ public class ChooChooPlaneController {
         return null; // No extension
     }
 
+    /**
+     * Updates query when back button is pressed
+     */
     private void onBack() {
         int current = model.getPage();
         if (current > 1) {
@@ -201,14 +245,18 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * Updates Filter ComboBox
+     */
     private void updateComboBox(){
         if (model.hasDB()){
             view.setComboBox(model.getComboBoxResults());
         }
     }
 
-
-
+    /**
+     * Updates query when next button is pressed
+     */
     private void onNext() {
         int current = model.getPage();
         if (current < model.getMaxPage()) {
@@ -218,8 +266,9 @@ public class ChooChooPlaneController {
         }
     }
 
-
-
+    /**
+     * When table sorted redo Query
+     */
     private class TableHeaderSortHandler extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e){
@@ -228,6 +277,9 @@ public class ChooChooPlaneController {
 
     }
 
+    /**
+     * Logic to allow user to change table pagination
+     */
     private class PaginationFocusHandler implements FocusListener {
         @Override
         public void focusGained(FocusEvent e) {
@@ -241,6 +293,9 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * Logic to allow user to change table pagination
+     */
     private class PaginationKeyHandler extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
@@ -251,6 +306,9 @@ public class ChooChooPlaneController {
         }
     }
 
+    /**
+     * Logic to allow user to change table pagination
+     */
     private void updatePaginationFromField() {
         boolean hasRun = view.getHasPaginationRun();
         if (!hasRun){

@@ -4,6 +4,10 @@ import java.io.File;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Class for the data Model of the Flight Data required for Table Population
+ * and DAta for ComboBox options
+ */
 public class ChooChooPlaneFlightModel {
 
     private String db_url ;
@@ -20,6 +24,11 @@ public class ChooChooPlaneFlightModel {
 
     }
 
+    /**
+     * Gets results for the Filter ComboBox
+     *
+     * @return String Array containing all distinct selay reasons
+     */
     public String [] getComboBoxResults(){
 
         try (Connection conn = DriverManager.getConnection(db_url)){
@@ -46,13 +55,23 @@ public class ChooChooPlaneFlightModel {
         }
     }
 
-    // Placeholder: Add search result logic later
+    /**
+     * Gets Search results for table populations
+     * takes into account pagination and selected filters
+     *
+     * @param mapSearchParams Map Containing all Search Parameters
+     * @param columns total number of columns in the GUI table
+     * @param sort if any headers are being sorted on
+     * @return Object 2D Array Containing data for the tables top be populated
+     */
+
     public Object [][] getSearchResults(Map<Integer,String> mapSearchParams, int columns,Object [] sort) {
         Map<Integer,String> valueLookup = getValueLookup();
 
         searchResults = new Object[pagination][columns];
         List<Object> paramValues = new ArrayList<>();
 
+        //Two string builders one to help with Pagination logic
 
         StringBuilder sql = new StringBuilder("""
                 SELECT
@@ -70,15 +89,15 @@ public class ChooChooPlaneFlightModel {
                          JOIN Airline ON Airline.iata_code = Flight.airline_code
                          LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id\s""");
 
-                StringBuilder sql_count = new StringBuilder("""
-                        SELECT COUNT(*) AS Total
-                        FROM Flight
-                                 JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin
-                                 JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination
-                                 JOIN Airline ON Airline.iata_code = Flight.airline_code
-                                 LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id""");
+        StringBuilder sql_count = new StringBuilder("""
+                SELECT COUNT(*) AS Total
+                FROM Flight
+                         JOIN Airport AS AirportOrigin ON AirportOrigin.iata_code = Flight.flight_origin
+                         JOIN Airport AS AirportDestination ON AirportDestination.iata_code = Flight.flight_destination
+                         JOIN Airline ON Airline.iata_code = Flight.airline_code
+                         LEFT OUTER JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id""");
 
-
+        //Apply filters
         if (!mapSearchParams.isEmpty()) {
             boolean first = true;
             for (Map.Entry<Integer, String> entry : mapSearchParams.entrySet()) {
@@ -208,7 +227,13 @@ public class ChooChooPlaneFlightModel {
 
         return searchResults;
     }
-    
+
+
+    /**
+     * Lookup to compare Int values for Columns declared in ChooChooPlaneController
+     *
+     * @return Map to correlate int to its db column
+     */
     public HashMap<Integer, String> getValueLookup(){
         HashMap<java.lang.Integer, java.lang.String> valueLookup = new HashMap<>();
         valueLookup.put(0,"flight_origin");
@@ -227,6 +252,12 @@ public class ChooChooPlaneFlightModel {
         return has_db;
     }
 
+    /**
+     * Lookup to return table name given a column header
+     *
+     * @param col a table header Column
+     * @return equivalent String table values of that header
+     */
     public String getCol(Object col){
         String str = col.toString();
         return switch (str) {

@@ -13,6 +13,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * CLass the greats Main Body for Choo Choo Plane GUI
+ *
+ * @author Luke Cadman
+ */
+
 public class ChooChooPlaneView {
 
     private JFrame frame;
@@ -57,7 +63,11 @@ public class ChooChooPlaneView {
         createAndShowGUI();
     }
 
-
+    /**
+     * Main GUI creation logic call all other methods
+     * using Grid Bag Constraints
+     * @see GridBagConstraints
+     */
     private void createAndShowGUI() {
         frame = new JFrame("Choo Choo Plane");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,7 +98,12 @@ public class ChooChooPlaneView {
         frame.setVisible(true);
     }
 
-
+    /**
+     * Creates file selection box to allow choice for database
+     *
+     * @param pane Main Pane of GUI
+     * @param c Main Grid Bag Constrains of frame
+     */
     private void addFileSearchToPane(Container pane, GridBagConstraints c) {
         dbButton = new JButton("Select DB Location");
         c.weightx = 0.3;
@@ -101,6 +116,12 @@ public class ChooChooPlaneView {
         pane.add(dbButton, c);
     }
 
+    /**
+     * Creates All search and filter controls and labels
+     *
+     * @param pane Main Pane of GUI
+     * @param c Main Grid Bag Constrains of frame
+     */
     private void addSearchFormToPane(Container pane, GridBagConstraints c) {
         c.weightx =0.5;
         searchFields = new ArrayList<>();
@@ -178,7 +199,12 @@ public class ChooChooPlaneView {
         pane.add(barchartOptions, c);
 
     }
-
+    /**
+     * Creates all table GUi items include pagination and next.
+     *
+     * @param pane Main Pane of GUI
+     * @param c Main Grid Bag Constrains of frame
+     */
     private void addTablePane(Container pane, GridBagConstraints c) {
 
         tableModel = new DefaultTableModel(new Object[0][0], columnNames);
@@ -219,6 +245,11 @@ public class ChooChooPlaneView {
         nextButton = new JButton("Next");
         pane.add(nextButton, c);
     }
+    /**
+     * Creates Graph creation buttons
+     *
+     * @param pane Main Pane of GUI
+     */
 
     private void addGraphButtonsToPane(Container pane) {
         GridBagConstraints c = new GridBagConstraints();
@@ -240,6 +271,11 @@ public class ChooChooPlaneView {
         pane.add(loading, c);
     }
 
+    /**
+     * used to show user if there is an internal error
+     *
+     * @param errorText Text to be Displayed on the Modal
+     */
     public void showError(String errorText){
         if ((errorMessage !=null)&&(errorMessage.isVisible())){
             errorMessage.dispose();
@@ -263,6 +299,7 @@ public class ChooChooPlaneView {
     public void setTableData(Object [][] data){
         DefaultTableModel model = tableModel;
 
+        //Horrible Code to allow for retention of how table is Sorted
         // Save filter and sort keys
         TableRowSorter<DefaultTableModel> oldSorter;
         oldSorter = (TableRowSorter<DefaultTableModel>) table.getRowSorter();
