@@ -23,6 +23,7 @@ public class ChooChooPlaneView {
     private JLabel pageLabel;
     private JTextField paginationField;
     private JButton submitButton;
+    private JButton clearButton;
     private JButton barGraphButton;
     private JButton lineGraphButton;
     private JButton dbButton;
@@ -32,10 +33,9 @@ public class ChooChooPlaneView {
     private JLabel loading;
     private JDialog errorMessage;
     private JLabel error;
+    private JComboBox<?> barchartOptions;
     private boolean hasPaginationRun;
-    private final boolean shouldFill = true;
-    private final boolean shouldWeightX = true;
-    private final boolean RIGHT_TO_LEFT = false;
+
     private final String[] columnNames = {
             "Flight Number", "Date", "Arrival Airport", "Departure Airport", "Airline",
             "Airline Code", "Delay", "Delay Reason"
@@ -56,6 +56,8 @@ public class ChooChooPlaneView {
     public ChooChooPlaneView () {
         createAndShowGUI();
     }
+
+
     private void createAndShowGUI() {
         frame = new JFrame("Choo Choo Plane");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,15 +68,15 @@ public class ChooChooPlaneView {
         } catch (Exception ignored) {
         }
 
-        if (RIGHT_TO_LEFT) {
-            pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        }
+
+        pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
 
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        if (shouldFill) {
-            c.fill = GridBagConstraints.HORIZONTAL;
-        }
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+
 
         addFileSearchToPane(pane, c);
         addTablePane(pane, c);
@@ -89,7 +91,7 @@ public class ChooChooPlaneView {
 
     private void addFileSearchToPane(Container pane, GridBagConstraints c) {
         dbButton = new JButton("Select DB Location");
-        if (shouldWeightX) c.weightx = 0.3;
+        c.weightx = 0.3;
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -109,6 +111,12 @@ public class ChooChooPlaneView {
                 {"End Date", "Delay"},
                 {"Delay Reason", "Selected Is Less than"}
         };
+
+        c.gridx = 1;
+        c.gridy = 1;
+        JLabel Title = new JLabel("Search and Line Chart Params",SwingConstants.CENTER);
+        pane.add(Title, c);
+
 
         int row = 1;
         for (String[] pair : labels) {
@@ -136,9 +144,10 @@ public class ChooChooPlaneView {
             }
         }
 
+        row =row*2;
         // Last row has only one text field and one button
         c.gridx = 0;
-        c.gridy = row * 2 - 1;
+        c.gridy = row- 1;
         JComboBox<String> delayReasonField = new JComboBox<>();
         searchFields.add(delayReasonField);
         pane.add(delayReasonField, c);
@@ -148,10 +157,25 @@ public class ChooChooPlaneView {
         searchFields.add(greaterOrLess);
         pane.add(greaterOrLess,c);
 
-        c.gridx = 1;
-        c.gridy = row * 2;
+
+        c.gridx = 0;
+        c.gridy = row;
+
+        clearButton = new JButton("Clear");
+        pane.add(clearButton, c);
+
+        c.gridx = 2;
         submitButton = new JButton("GO!");
         pane.add(submitButton, c);
+
+        c.gridx = 0;
+        c.gridy = row+1;
+        JLabel barchart = new JLabel("Barchart options",SwingConstants.CENTER);
+        pane.add(barchart, c);
+
+        c.gridy = row+2;
+        barchartOptions = new JComboBox<>(new String[]{"Group by Airline", "Group by Airport"});
+        pane.add(barchartOptions, c);
 
     }
 
@@ -167,7 +191,7 @@ public class ChooChooPlaneView {
         c.weighty = 1;
         c.gridx = 4;
         c.gridwidth = 4;
-        c.gridheight = 11;
+        c.gridheight = 13;
         c.gridy = 2;
         pane.add(scrollPane, c);
 
@@ -176,7 +200,7 @@ public class ChooChooPlaneView {
         c.weighty = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
-        c.gridy = 13;
+        c.gridy = 15;
         c.insets = new Insets(0, 5, 0, 5);
 
         c.gridx = 4;
@@ -216,48 +240,25 @@ public class ChooChooPlaneView {
         pane.add(loading, c);
     }
 
-    // --- Public getters for controller access ---
-    public JFrame getFrame() { return frame; }
+    public void showError(String errorText){
+        if ((errorMessage !=null)&&(errorMessage.isVisible())){
+            errorMessage.dispose();
+            error.setText(errorText);
+            errorMessage.setLocationRelativeTo(frame);
+            errorMessage.setVisible(true);
+        }else{
+            errorMessage = new JDialog(frame,"Error",true);
+            error = new JLabel(errorText);
+            errorMessage.add(error);
+            errorMessage.pack();
+            errorMessage.setLocationRelativeTo(frame);
+            errorMessage.setVisible(true);
+        }
 
-    public JTable getTable() { return table; }
-
-    public JButton getBarGraphButton(){
-        return  barGraphButton;
     }
 
-    public JButton getLineGraphButton(){
-        return lineGraphButton;
-    }
-    public DefaultTableModel getTableModel() { return tableModel; }
 
-    public JButton getSubmitButton() { return submitButton; }
-
-    public JButton getDbButton() { return dbButton; }
-
-    public JButton getNextButton() { return nextButton; }
-
-    public JButton getBackButton() { return backButton; }
-
-    public JTextField getPaginationField() { return paginationField; }
-
-    public JLabel getPageLabel() { return pageLabel; }
-
-    public List<JComponent> getSearchFields() { return searchFields; }
-
-    public void setLoading(){
-        loading.setText("Loading . . .");
-    }
-    public void setLoaded(){
-        loading.setText("Complete!");
-    }
-
-    public void resetScroll(){
-        scrollPane.getViewport().setViewPosition(new Point(0,0));
-    }
-
-    public void clearTableData(){
-        tableModel.setRowCount(0);
-    }
+    // Getters and Setters
 
     public void setTableData(Object [][] data){
         DefaultTableModel model = tableModel;
@@ -295,7 +296,7 @@ public class ChooChooPlaneView {
             List<? extends RowSorter.SortKey> sortKeys = sorter.getSortKeys();
 
             if (!sortKeys.isEmpty()) {
-                RowSorter.SortKey key = sortKeys.get(0);
+                RowSorter.SortKey key = sortKeys.getFirst();
                 int columnIndex = key.getColumn();
                 SortOrder order = key.getSortOrder();
                 String columnName = table.getColumnName(columnIndex);
@@ -304,7 +305,7 @@ public class ChooChooPlaneView {
             }
         }
 
-        return null; // or return new Object[] { null, SortOrder.UNSORTED };
+        return null;
     }
 
     public int getTotalColumns(){
@@ -318,7 +319,7 @@ public class ChooChooPlaneView {
 
     public void setComboBox(String [] results){
         List<JComponent> temp = getSearchFields();
-        JComboBox combo = ((JComboBox) temp.getLast());
+        JComboBox combo = ((JComboBox) temp.get(temp.size()-2));
 
         combo.removeAllItems();
         for (String result : results) {
@@ -326,24 +327,6 @@ public class ChooChooPlaneView {
         }
         searchFields.set((searchFields.size()-1),combo);
     }
-
-    public void showError(String errorText){
-        if ((errorMessage !=null)&&(errorMessage.isVisible())){
-            errorMessage.dispose();
-            error.setText(errorText);
-            errorMessage.setLocationRelativeTo(frame);
-            errorMessage.setVisible(true);
-        }else{
-            errorMessage = new JDialog(frame,"Error",true);
-            error = new JLabel(errorText);
-            errorMessage.add(error);
-            errorMessage.pack();
-            errorMessage.setLocationRelativeTo(frame);
-            errorMessage.setVisible(true);
-        }
-
-    }
-
 
     public String[][] getPlaceholders() {
         return placeholders;
@@ -359,5 +342,53 @@ public class ChooChooPlaneView {
 
     public void setHasPaginationRun(boolean hasPaginationRun) {
         this.hasPaginationRun = hasPaginationRun;
+    }
+    // --- Public getters for controller access ---
+    public JFrame getFrame() { return frame; }
+
+    public JTable getTable() { return table; }
+
+    public JButton getBarGraphButton(){
+        return  barGraphButton;
+    }
+
+    public JButton getLineGraphButton(){
+        return lineGraphButton;
+    }
+    public DefaultTableModel getTableModel() { return tableModel; }
+
+    public JButton getSubmitButton() { return submitButton; }
+
+    public JButton getDbButton() { return dbButton; }
+
+    public JButton getNextButton() { return nextButton; }
+
+    public JButton getBackButton() { return backButton; }
+
+    public JTextField getPaginationField() { return paginationField; }
+
+    public JLabel getPageLabel() { return pageLabel; }
+
+    public List<JComponent> getSearchFields() { return searchFields; }
+
+    public JButton getClearButton() { return clearButton; }
+
+    public void setLoading(){
+        loading.setText("Loading . . .");
+    }
+    public void setLoaded(){
+        loading.setText("Complete!");
+    }
+
+    public void resetScroll(){
+        scrollPane.getViewport().setViewPosition(new Point(0,0));
+    }
+
+    public void clearTableData(){
+        tableModel.setRowCount(0);
+    }
+
+    public JComboBox<?> getBarchartOptions() {
+        return barchartOptions;
     }
 }

@@ -31,20 +31,38 @@ public class ChooChooPlaneController {
         view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
         view.getBarGraphButton().addActionListener(e -> createBarGraph());
         view.getLineGraphButton().addActionListener(e -> createLineGraph());
+        view.getClearButton().addActionListener(e ->resetSearch());
     }
 
+    private void resetSearch(){
+        String[][] values = view.getPlaceholders();
+        List<JComponent> fields = view.getSearchFields();
+        int count = 0;
+        for (JComponent field : fields) {
+            if (field instanceof JTextField) {
+                ((JTextField) field).setText(values[count][0]);
+                field.grabFocus();
+            } else if (field instanceof JComboBox<?>) {
+               ((JComboBox<?>) field).setSelectedIndex(0);
+            } else {
+              ((JCheckBox) field).setSelected(false);
+            }
+            count++;
+        }
+        view.getClearButton().grabFocus();
+    }
 
     private void createBarGraph(){
         if(model.hasDB()) {
             String xAxis = "Delay Time";
             String yAxis = "Amount of Flights Total";
             String title = "Bar Chart of Punctuality ";
-
+            String groupBy = (String) view.getBarchartOptions().getSelectedItem();
             Map<Integer,String> mapSearchParams = setSearchParams();
             ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),
                     title, xAxis, yAxis
             );
-            graphController.createBarChart(mapSearchParams,view);
+            graphController.createBarChart(mapSearchParams,view,groupBy);
 
         }else {
             view.showError("Please select a database");
@@ -54,7 +72,7 @@ public class ChooChooPlaneController {
 
     private void createLineGraph(){
         if(model.hasDB()) {
-            String xAxis = "Delay Time";
+            String xAxis = "Average Delay Time";
             String yAxis = "Amount of Flights Total";
             String title = "Bar Chart of Punctuality ";
 

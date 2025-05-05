@@ -24,7 +24,27 @@ public class ChooChooPlaneGraphView extends JFrame {
     }
 
     public void createBarChart(Object [][] data, ChooChooPlaneView error){
+        if (data != null) {
 
+            addToDataSet(data);
+
+            JFreeChart barChart = ChartFactory.createBarChart(
+                    this.graphTitle,
+                    this.xlabel,
+                    this.ylabel,
+                    this.graphData
+            );
+
+            ChartPanel chartPanel = new ChartPanel(barChart);
+
+            this.add(chartPanel);
+            this.pack();
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            this.setLocationRelativeTo(null);
+            this.setVisible(true);
+        }else {
+            error.showError("No data found");
+        }
     }
 
     public void createLineChart(Object [][] data, ChooChooPlaneView error){
@@ -32,7 +52,7 @@ public class ChooChooPlaneGraphView extends JFrame {
 
             addToDataSet(data);
 
-            JFreeChart barChart = ChartFactory.createLineChart(
+            JFreeChart lineChart = ChartFactory.createLineChart(
                     this.graphTitle,
                     this.xlabel,
                     this.ylabel,
@@ -43,7 +63,7 @@ public class ChooChooPlaneGraphView extends JFrame {
                     false
             );
 
-            ChartPanel chartPanel = new ChartPanel(barChart);
+            ChartPanel chartPanel = new ChartPanel(lineChart);
 
             this.add(chartPanel);
             this.pack();

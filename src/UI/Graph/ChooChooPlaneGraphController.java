@@ -15,8 +15,8 @@ public class ChooChooPlaneGraphController {
         view = new ChooChooPlaneGraphView(graphTitle,xLabel,yLabel);
     }
 
-    public void createBarChart(Map<Integer,String> mapParams,ChooChooPlaneView error){
-        view.createBarChart(model.getBarChartData(mapParams),error);
+    public void createBarChart(Map<Integer,String> mapParams,ChooChooPlaneView error,String groupBy){
+        view.createBarChart(model.getBarChartData(mapParams,groupBy),error);
 
     }
 
