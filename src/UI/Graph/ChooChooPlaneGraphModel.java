@@ -27,8 +27,12 @@ public class ChooChooPlaneGraphModel {
     }
 
 
+    public Object[][] getBarChartData(Map<Integer,String> mapParams) {
 
-    public Object [][] getGraphData(String [][] filters){
+        return graphData;
+    }
+
+    public Object [][] getLineChartData(Map<Integer,String> mapParams){
 
         List<Object> paramValues = new ArrayList<>();
         StringBuilder sql = new StringBuilder("""
@@ -40,9 +44,9 @@ public class ChooChooPlaneGraphModel {
                 """);
 
         boolean first=true;
-        for(int i=0;i<filters.length;i++){
+        for(int i=0;i<mapParams.length;i++){
             String condition = null;
-            if (filters[i][0]!= null) {
+            if (mapParams[i][0]!= null) {
                 switch (filters[i][1]){
                    case "0":
                        paramValues.add("%"+filters[i][0]+"%");

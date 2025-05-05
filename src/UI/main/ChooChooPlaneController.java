@@ -29,35 +29,40 @@ public class ChooChooPlaneController {
         view.getPaginationField().addKeyListener(new PaginationKeyHandler());
         view.getTableHeader().addMouseListener(new TableHeaderSortHandler());
         view.getTable().getSelectionModel().addListSelectionListener(this::onRowSelect);
-        view.getAirportGraphButton().addActionListener(e -> createGraphTile(new int[]{0, 1}));
-        view.getAirlineGraphButton().addActionListener(e ->createGraphTile(new int[]{3, 4}));
-        view.getTimeGraphButton().addActionListener(e ->createGraphTile(new int[]{5, 6}));
-    }
-
-    private String[][] getFilteredFields(int[] required){
-        Map<Integer,String> SearchParams = setSearchParams();
-
-        String [][] filters = new String[2][2];
-
-        for(int i=0;i<required.length;i++){
-          filters[i][0] = SearchParams.get(required[i]);
-          filters[i][1] = String.valueOf(required[i]);
-        }
-        return filters;
+        view.getBarGraphButton().addActionListener(e -> createBarGraph());
+        view.getLineGraphButton().addActionListener(e -> createLineGraph());
     }
 
 
-
-    private void createGraphTile(int [] requiredFields){
+    private void createBarGraph(){
         if(model.hasDB()) {
             String xAxis = "Delay Time";
             String yAxis = "Amount of Flights Total";
-            String title = "Bar Chart of";
-            String[][] fields = getFilteredFields(requiredFields);
-            title = title + " - " + fields[0][0] + " - " + fields[0][1];
-                ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(), fields,
+            String title = "Bar Chart of Punctuality ";
+
+            Map<Integer,String> mapSearchParams = setSearchParams();
+            ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),
+                    title, xAxis, yAxis
+            );
+            graphController.createbarChart(mapSearchParams,view);
+
+        }else {
+            view.showError("Please select a database");
+        }
+    }
+
+
+    private void createLineGraph(){
+        if(model.hasDB()) {
+            String xAxis = "Delay Time";
+            String yAxis = "Amount of Flights Total";
+            String title = "Bar Chart of Punctuality ";
+
+            Map<Integer,String> mapSearchParams = setSearchParams();
+                ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(), mapSearchParams,
                         title, xAxis, yAxis,view
                 );
+
         }else {
             view.showError("Please select a database");
         }
@@ -126,8 +131,10 @@ public class ChooChooPlaneController {
         for (JComponent field : fields) {
             if (field instanceof JTextField) {
                 val = ((JTextField) field).getText();
-            }else{
+            }else if (field instanceof JComboBox<?>){
                 val = (String) ((JComboBox<?>) field).getSelectedItem();
+            }else {
+                val = String.valueOf(((JCheckBox) field).isSelected());
             }
             if (((val != null) && (!Objects.equals(placeholders[count][0], val)) && (val.matches(placeholders[count][1])))){
                 mapSearchParams.put(count,val);

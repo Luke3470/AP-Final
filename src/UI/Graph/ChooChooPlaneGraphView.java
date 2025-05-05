@@ -16,12 +16,18 @@ public class ChooChooPlaneGraphView extends JFrame {
     private String ylabel;
     private DefaultCategoryDataset graphData;
 
-    public ChooChooPlaneGraphView(String graphTitle, String xlabel, String ylabel, Object[][] data, ChooChooPlaneView error) {
+    public ChooChooPlaneGraphView(String graphTitle, String xlabel, String ylabel) {
         this.graphTitle = graphTitle;
         this.xlabel = xlabel;
         this.ylabel = ylabel;
         this.graphData = new DefaultCategoryDataset();
+    }
 
+    public void createBarChart(Object [][] data, ChooChooPlaneView error){
+
+    }
+
+    public void createLineChart(Object [][] data, ChooChooPlaneView error){
         if (data != null) {
 
             addToDataSet(data);

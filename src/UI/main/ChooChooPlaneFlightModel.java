@@ -108,46 +108,56 @@ public class ChooChooPlaneFlightModel {
                 String value = entry.getValue();
 
                 String condition;
-                switch (column) {
-                    case "flight_origin":
-                    case "flight_destination":
-                    case "Airline.name":
-                    case "airline_code":
-                        value = "%"+value+"%";
-                        condition = column + " LIKE ?";
-                        paramValues.add(value);
-                        break;
-                    case "reason":
-                        condition = column + "= ?";
-                        paramValues.add(value);
-                        break;
-                    case "delay_length":
-                    case "flight_number":
-                        paramValues.add(Integer.parseInt(value));
-                        condition = column + " = ?";
-                        break;
-                    case "start_date":
-                    case "end_date":
-                        paramValues.add(Integer.parseInt(value));
-                        if (column.equals("start_date")) {
-                            condition = "date >= ?";
-                        }else {
-                            condition = "date <= ?";
-                        }
-                        break;
-                    default:
-                        continue;
-                }
-                if (first) {
-                    first = false;
+                if (column !=null) {
+                    switch (column) {
+                        case "flight_origin":
+                        case "flight_destination":
+                        case "Airline.name":
+                        case "airline_code":
+                            value = "%" + value + "%";
+                            condition = column + " LIKE ?";
+                            paramValues.add(value);
+                            break;
+                        case "reason":
+                            condition = column + "= ?";
+                            paramValues.add(value);
+                            break;
+                        case "delay_length":
+                            if (mapSearchParams.get(9) != null) {
+                                condition = column + " <= ?";
 
-                    sql.append("\n WHERE \n").append(condition);
-                    sql_count.append("\n WHERE \n").append(condition);
-                }else {
-                    sql.append(" AND ").append(condition);
-                    sql_count.append(" AND ").append(condition);
-                }
+                            } else {
+                                condition = column + " >= ?";
+                            }
+                            paramValues.add(Integer.parseInt(value));
+                            break;
+                        case "flight_number":
+                            paramValues.add(Integer.parseInt(value));
+                            condition = column + " = ?";
+                            break;
+                        case "start_date":
+                        case "end_date":
+                            paramValues.add(Integer.parseInt(value));
+                            if (column.equals("start_date")) {
+                                condition = "date >= ?";
+                            } else {
+                                condition = "date <= ?";
+                            }
+                            break;
+                        default:
+                            continue;
+                    }
 
+                    if (first) {
+                        first = false;
+
+                        sql.append("\n WHERE \n").append(condition);
+                        sql_count.append("\n WHERE \n").append(condition);
+                    } else {
+                        sql.append(" AND ").append(condition);
+                        sql_count.append(" AND ").append(condition);
+                    }
+                }
             }
         }
         if(sort != null){

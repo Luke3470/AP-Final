@@ -23,12 +23,12 @@ public class ChooChooPlaneView {
     private JLabel pageLabel;
     private JTextField paginationField;
     private JButton submitButton;
-    private JButton airportGraphButton;
-    private JButton airlineGraphButton;
-    private JButton timeGraphButton;
+    private JButton barGraphButton;
+    private JButton lineGraphButton;
     private JButton dbButton;
     private JScrollPane scrollPane;
     private List<JComponent> searchFields;
+    private JCheckBox greaterOrLess;
     private JLabel loading;
     private JDialog errorMessage;
     private JLabel error;
@@ -50,7 +50,8 @@ public class ChooChooPlaneView {
             {"YYYYMMDD","(2019|2020|2021|2022|2023)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"},
             {"YYYYMMDD","(2019|2020|2021|2022|2023)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"},
             {"1O","\\d{1,4}"},
-            {"None",".*"}};
+            {"None",".*"},
+            {"false",".*"}};
 
     public ChooChooPlaneView () {
         createAndShowGUI();
@@ -99,13 +100,14 @@ public class ChooChooPlaneView {
     }
 
     private void addSearchFormToPane(Container pane, GridBagConstraints c) {
+        c.weightx =0.5;
         searchFields = new ArrayList<>();
         String[][] labels = {
                 {"Arrival Airport","Departure Airport"},
                 {"Flight Number", "Airline"},
                 {"Airline Code", "Start Date"},
                 {"End Date", "Delay"},
-                {"Delay Reason", "Submit!"}
+                {"Delay Reason", "Selected Is Less than"}
         };
 
         int row = 1;
@@ -142,8 +144,15 @@ public class ChooChooPlaneView {
         pane.add(delayReasonField, c);
 
         c.gridx = 2;
+        greaterOrLess = new JCheckBox();
+        searchFields.add(greaterOrLess);
+        pane.add(greaterOrLess,c);
+
+        c.gridx = 1;
+        c.gridy = row * 2;
         submitButton = new JButton("GO!");
         pane.add(submitButton, c);
+
     }
 
     private void addTablePane(Container pane, GridBagConstraints c) {
@@ -158,7 +167,7 @@ public class ChooChooPlaneView {
         c.weighty = 1;
         c.gridx = 4;
         c.gridwidth = 4;
-        c.gridheight = 10;
+        c.gridheight = 11;
         c.gridy = 2;
         pane.add(scrollPane, c);
 
@@ -167,7 +176,7 @@ public class ChooChooPlaneView {
         c.weighty = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
-        c.gridy = 12;
+        c.gridy = 13;
         c.insets = new Insets(0, 5, 0, 5);
 
         c.gridx = 4;
@@ -190,21 +199,17 @@ public class ChooChooPlaneView {
     private void addGraphButtonsToPane(Container pane) {
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = 0;
-        c.weightx = 0.5;
+        c.weightx = 1;
         c.insets = new Insets(0, 5, 0, 5);
         c.fill = GridBagConstraints.HORIZONTAL;
 
         c.gridx = 4;
-        airportGraphButton = new JButton("Airport Punctuality Graph");
-        pane.add(airportGraphButton, c);
-
-        c.gridx = 5;
-        airlineGraphButton = new JButton("Airline Punctuality Graph");
-        pane.add(airlineGraphButton, c);
+        barGraphButton = new JButton("Airport/Airline Punctuality Bar Chart");
+        pane.add(barGraphButton, c);
 
         c.gridx = 6;
-        timeGraphButton = new JButton("Time Period Punctuality Graph");
-        pane.add(timeGraphButton, c);
+        lineGraphButton = new JButton("Time Period Punctuality Line Graph");
+        pane.add(lineGraphButton, c);
 
         c.gridx = 7;
         loading = new JLabel("NA", SwingConstants.CENTER);
@@ -216,15 +221,16 @@ public class ChooChooPlaneView {
 
     public JTable getTable() { return table; }
 
+    public JButton getBarGraphButton(){
+        return  barGraphButton;
+    }
+
+    public JButton getLineGraphButton(){
+        return lineGraphButton;
+    }
     public DefaultTableModel getTableModel() { return tableModel; }
 
     public JButton getSubmitButton() { return submitButton; }
-
-    public JButton getAirportGraphButton() { return airportGraphButton; }
-
-    public JButton getAirlineGraphButton() { return airlineGraphButton; }
-
-    public JButton getTimeGraphButton() { return timeGraphButton; }
 
     public JButton getDbButton() { return dbButton; }
 
