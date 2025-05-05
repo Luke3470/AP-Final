@@ -20,28 +20,6 @@ public class ChooChooPlaneFlightModel {
 
     }
 
-
-    public void setPagination(int pagination) {
-        this.pagination = pagination;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getMaxPage() {
-        return maxPage;
-    }
-
-    public String getDb_url() {
-        return db_url;
-    }
-
-
     public String [] getComboBoxResults(){
 
         try (Connection conn = DriverManager.getConnection(db_url)){
@@ -245,11 +223,6 @@ public class ChooChooPlaneFlightModel {
         return valueLookup;
     }
 
-    public void setDb_url(File db_url) {
-        this.db_url = "jdbc:sqlite:"+db_url;
-        this.has_db = true;
-    }
-
     public boolean hasDB(){
         return has_db;
     }
@@ -267,6 +240,33 @@ public class ChooChooPlaneFlightModel {
             case "Delay Reason" -> "reason";
             default -> null;
         };
+    }
+
+    //Getters and setters
+
+    public void setPagination(int pagination) {
+        this.pagination = pagination;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getMaxPage() {
+        return maxPage;
+    }
+
+    public String getDb_url() {
+        return db_url;
+    }
+
+    public void setDb_url(File db_url) {
+        this.db_url = "jdbc:sqlite:"+db_url;
+        this.has_db = true;
     }
 
 }

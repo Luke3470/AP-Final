@@ -2,6 +2,12 @@ package UI.Modal;
 
 import java.sql.*;
 
+/**
+ * This Gets all the data for a row Modal
+ *
+ * @author Luke Cadman
+ */
+
 public class ChooChooPlaneFlightModalModel {
 
     private final String dbURL;
@@ -48,7 +54,7 @@ public class ChooChooPlaneFlightModalModel {
      * Using JDBC to query and collect data about a specific record
      * @param date Date of the selected record used a composite key to find correct DB entry
      * @param flightNum flight_number of the selected record used a composite key to find correct DB entry
-     * @return Returns String array in order to populate the modal created in the Modal View
+     * @return Returns String array in order to populate the modal created in the Modal View can be empty if no results
      * @see ChooChooPlaneFlightModalView
      * @see org.sqlite.JDBC
      */
@@ -84,7 +90,6 @@ public class ChooChooPlaneFlightModalModel {
             throw new RuntimeException("Error fetching flight data", e);
         }
 
-        // Return empty/default data if no result found
         return new String[14];
     }
 }

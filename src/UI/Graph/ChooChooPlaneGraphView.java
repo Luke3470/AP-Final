@@ -9,6 +9,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 
+/**
+ * Main Class for Creation of both Bar Chart and Line Chart
+ *
+ * @author Luke Cadman
+ */
 public class ChooChooPlaneGraphView extends JFrame {
 
     private String graphTitle;
@@ -23,6 +28,11 @@ public class ChooChooPlaneGraphView extends JFrame {
         this.graphData = new DefaultCategoryDataset();
     }
 
+    /**
+     * Creates a Bar chart and Shows a JFrame containing it
+     * @param data Object 2D array containing data in the correct format for JFreeChartTables
+     * @param error Main JFrame to allow for error to be triggered if no results
+     */
     public void createBarChart(Object [][] data, ChooChooPlaneView error){
         if (data != null) {
 
@@ -47,6 +57,11 @@ public class ChooChooPlaneGraphView extends JFrame {
         }
     }
 
+    /**
+     * Creates a Line chart and Shows a JFrame containing it
+     * @param data Object 2D array containing data in the correct format for JFreeChartTables
+     * @param error Main JFrame to allow for error to be triggered if no results
+     */
     public void createLineChart(Object [][] data, ChooChooPlaneView error){
         if (data != null) {
 
@@ -75,6 +90,10 @@ public class ChooChooPlaneGraphView extends JFrame {
         }
     }
 
+    /**
+     * Adds data Object to set graph creation values
+     * @param data Object 2D array containing data in the correct format for JFreeChartTables
+     */
     private void addToDataSet(Object[][] data) {
         for (Object[] row : data) {
             Number value = (Number) row[0];

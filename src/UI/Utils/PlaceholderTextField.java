@@ -5,6 +5,14 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+
+/**
+ * Class created to add placeholder text to JTextField so Silly people understand
+ * the required format
+ *
+ * @author Luke Cadman
+ */
+
 public class PlaceholderTextField extends JTextField {
 
     private String placeholder;
