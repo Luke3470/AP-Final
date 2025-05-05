@@ -1,5 +1,6 @@
 package UI.Graph;
 
+import java.lang.constant.ConstantDesc;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,52 +36,88 @@ public class ChooChooPlaneGraphModel {
     public Object [][] getLineChartData(Map<Integer,String> mapParams){
 
         List<Object> paramValues = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("""
+        StringBuilder sqlSelect = new StringBuilder("""
                 SELECT 
                     Delay_Reason.delay_length as Length,     
                     COUNT(Flight.flight_id) as Total                    
                 FROM Flight
-                JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id
+                """);
+        StringBuilder sqlJoins = new StringBuilder("""
+                     JOIN Delay_Reason ON Delay_Reason.flight_id = Flight.flight_id
+                """);
+        StringBuilder sqlWhere = new StringBuilder("""
+                
                 """);
 
-        boolean first=true;
-        for(int i=0;i<mapParams.length;i++){
-            String condition = null;
-            if (mapParams[i][0]!= null) {
-                switch (filters[i][1]){
-                   case "0":
-                       paramValues.add("%"+filters[i][0]+"%");
-                       break;
-                   case "3":
-                       sql.append("JOIN Airline ON Airline.iata_code = Flight.airline_Code");
-                       paramValues.add("%"+filters[i][0]+"%");
-                       break;
-                   case "5":
-                       paramValues.add(Integer.parseInt(filters[i][1]));
-                       break;
-                    default:
-                        continue;
-                }
-                condition = tableMap.get(Integer.parseInt(filters[i][1]));
-                if ((first) && (condition != null)){
-                    sql.append("\n GROUP BY Delay_Reason.delay_length \n");
-                    sql.append(" HAVING ").append(condition);
-                    first=false;
-                }else {
-                    sql.append(" AND ").append(condition);
+        Map<Integer,String> valueLookup = getValueLookup();
+        if (!mapParams.isEmpty()) {
+            boolean first = true;
+            boolean joinAirline =false;
+            for (Map.Entry<Integer, String> entry : mapParams.entrySet()) {
+                String column = valueLookup.get(entry.getKey());
+                String value = entry.getValue();
+
+                String condition;
+                if (column !=null) {
+                    switch (column) {
+                        case "Flight.flight_origin":
+                        case "Flight.flight_destination":
+                        case "Airline.name":
+                            if (!joinAirline){
+                                sqlJoins.append("JOIN Airline ON Airline.iata_code = Flight.airline_code");
+                                joinAirline = true;
+                            }
+                        case "Flight.airline_code":
+                            value = "%" + value + "%";
+                            condition = column + " LIKE ?";
+                            paramValues.add(value);
+                            break;
+                        case "reason":
+                            condition = column + "= ?";
+                            paramValues.add(value);
+                            break;
+                        case "delay_length":
+                            if (mapParams.get(9) != null) {
+                                condition = column + " <= ?";
+
+                            } else {
+                                condition = column + " >= ?";
+                            }
+                            paramValues.add(Integer.parseInt(value));
+                            break;
+                        case "flight_number":
+                            paramValues.add(Integer.parseInt(value));
+                            condition = column + " = ?";
+                            break;
+                        case "start_date":
+                        case "end_date":
+                            paramValues.add(Integer.parseInt(value));
+                            if (column.equals("start_date")) {
+                                condition = "date >= ?";
+                            } else {
+                                condition = "date <= ?";
+                            }
+                            break;
+                        default:
+                            continue;
+                    }
+                    if (first) {
+                        first = false;
+                        sqlWhere.append("Where ").append(condition);
+
+                    } else {
+                        sqlWhere.append(" AND ").append(condition);
+                    }
                 }
             }
         }
-        if (first){
-            sql.append("\n GROUP BY Delay_Reason.delay_length \n");
-        }
-        sql.append(" ;");
+        String sql = sqlSelect.append("\n").append(sqlJoins).append("\n").append(sqlWhere).append("\n").append("GROUP BY Delay_reason.delay_length;").toString();
 
-        System.out.println("SQL:"+sql.toString());
+        System.out.println("SQL:"+sql);
 
         try (Connection conn = DriverManager.getConnection(db_url)){
 
-            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
 
             for(int i=0;i<paramValues.size();i++){
@@ -115,6 +152,20 @@ public class ChooChooPlaneGraphModel {
         }
 
         return graphData;
+    }
+
+    public HashMap<Integer, String> getValueLookup(){
+        HashMap<java.lang.Integer, java.lang.String> valueLookup = new HashMap<>();
+        valueLookup.put(0,"flight_origin");
+        valueLookup.put(1,"flight_destination");
+        valueLookup.put(2,"flight_number");
+        valueLookup.put(3,"Airline.name");
+        valueLookup.put(4,"airline_code");
+        valueLookup.put(5,"start_date");
+        valueLookup.put(6,"end_date");
+        valueLookup.put(7,"delay_length");
+        valueLookup.put(8,"reason");
+        return valueLookup;
     }
 
 }

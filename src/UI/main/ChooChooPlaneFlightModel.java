@@ -150,7 +150,6 @@ public class ChooChooPlaneFlightModel {
 
                     if (first) {
                         first = false;
-
                         sql.append("\n WHERE \n").append(condition);
                         sql_count.append("\n WHERE \n").append(condition);
                     } else {

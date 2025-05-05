@@ -44,7 +44,7 @@ public class ChooChooPlaneController {
             ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),
                     title, xAxis, yAxis
             );
-            graphController.createbarChart(mapSearchParams,view);
+            graphController.createBarChart(mapSearchParams,view);
 
         }else {
             view.showError("Please select a database");
@@ -59,10 +59,9 @@ public class ChooChooPlaneController {
             String title = "Bar Chart of Punctuality ";
 
             Map<Integer,String> mapSearchParams = setSearchParams();
-                ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(), mapSearchParams,
-                        title, xAxis, yAxis,view
-                );
-
+            ChooChooPlaneGraphController graphController = new ChooChooPlaneGraphController(model.getDb_url(),
+                    title, xAxis, yAxis);
+            graphController.createLineChart(mapSearchParams,view);
         }else {
             view.showError("Please select a database");
         }
