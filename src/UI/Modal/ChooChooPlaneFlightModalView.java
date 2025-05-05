@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ChooChooPlaneFlightModalView {
+    private JButton closeButton;
+    private JFrame frame;
 
     /**
      * Calls createGUI Which using a JFrame formats data provided by the data Model for the modal
@@ -32,7 +34,7 @@ public class ChooChooPlaneFlightModalView {
                 "Delay Reason", "Delay Length"
         };
 
-        JFrame frame = new JFrame("Choo Choo Flight");
+        frame = new JFrame("Choo Choo Flight");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Container pane = frame.getContentPane();
 
@@ -61,14 +63,33 @@ public class ChooChooPlaneFlightModalView {
 
         c.gridx = 1;
         c.gridy = labels.length + 1;
-        JButton closeButton = new JButton("Close");
+        closeButton = new JButton("Close");
         pane.add(closeButton, c);
 
-        closeButton.addActionListener(e -> frame.dispose());
         frame.pack();
 
         // Center on screen
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    /**
+     * This is a getter for the closeButton variable used so the controller can assign an action
+     *
+     * @return Button which closes the modal in order for controller to interact
+     */
+
+    public JButton getCloseButton() {
+        return closeButton;
+    }
+
+    /**
+     *
+     * @return The frame of the modal to all for the controller to dispose() of it
+     *
+     * @see JFrame
+     */
+    public JFrame getFrame() {
+        return frame;
     }
 }
